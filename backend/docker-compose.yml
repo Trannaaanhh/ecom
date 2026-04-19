@@ -1,0 +1,253 @@
+services:
+  gateway:
+    build: ./api-gateway/nginx-gateway
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user-service
+      - catalog-service
+      - inventory-service
+      - search-service
+      - cart-service
+      - order-service
+      - payment-service
+      - shipping-service
+      - return-review-service
+      - marketing-notification-service
+      - ai-service
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    profiles: ["full"]
+    restart: unless-stopped
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    profiles: ["full"]
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.2
+    profiles: ["full"]
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+  user-service:
+    build: ./services/user-service
+    restart: unless-stopped
+    environment: &pg_env
+      DB_ENGINE: django.db.backends.postgresql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./services/user-service:/app
+    depends_on: [postgres, redis]
+    ports: ["8001:8000"]
+
+  catalog-service:
+    build: ./services/catalog-service
+    restart: unless-stopped
+    environment:
+      DB_ENGINE: django.db.backends.mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: catalog
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./services/catalog-service:/app
+    depends_on: [mysql]
+    ports: ["8002:8000"]
+
+  inventory-service:
+    build: ./services/inventory-service
+    restart: unless-stopped
+    environment:
+      <<: *pg_env
+      DB_NAME: ${POSTGRES_DB}
+    volumes:
+      - ./services/inventory-service:/app
+    depends_on: [postgres, redis]
+    ports: ["8003:8000"]
+
+  search-service:
+    build: ./services/search-service
+    restart: unless-stopped
+    environment:
+      <<: *pg_env
+      DB_NAME: ${POSTGRES_DB}
+    volumes:
+      - ./services/search-service:/app
+    depends_on: [postgres, redis]
+    ports: ["8004:8000"]
+
+  cart-service:
+    build: ./services/cart-service
+    restart: unless-stopped
+    environment:
+      <<: *pg_env
+      DB_NAME: ${POSTGRES_DB}
+    volumes:
+      - ./services/cart-service:/app
+    depends_on: [postgres, redis]
+    ports: ["8005:8000"]
+
+  order-service:
+    build: ./services/order-service
+    restart: unless-stopped
+    environment:
+      <<: *pg_env
+      DB_NAME: ${POSTGRES_DB}
+    volumes:
+      - ./services/order-service:/app
+    depends_on: [postgres]
+    ports: ["8006:8000"]
+
+  payment-service:
+    build: ./services/payment-service
+    restart: unless-stopped
+    environment:
+      <<: *pg_env
+      DB_NAME: ${POSTGRES_DB}
+    volumes:
+      - ./services/payment-service:/app
+    depends_on: [postgres]
+    ports: ["8007:8000"]
+
+  shipping-service:
+    build: ./services/shipping-service
+    restart: unless-stopped
+    environment:
+      <<: *pg_env
+      DB_NAME: ${POSTGRES_DB}
+    volumes:
+      - ./services/shipping-service:/app
+    depends_on: [postgres]
+    ports: ["8008:8000"]
+
+  return-review-service:
+    build: ./services/return-review-service
+    restart: unless-stopped
+    environment:
+      <<: *pg_env
+      DB_NAME: ${POSTGRES_DB}
+    volumes:
+      - ./services/return-review-service:/app
+    depends_on: [postgres]
+    ports: ["8009:8000"]
+
+  marketing-notification-service:
+    build: ./services/marketing-notification-service
+    restart: unless-stopped
+    environment:
+      <<: *pg_env
+      DB_NAME: ${POSTGRES_DB}
+    volumes:
+      - ./services/marketing-notification-service:/app
+    depends_on: [postgres, redis]
+    ports: ["8010:8000"]
+
+  ai-service:
+    build: ./services/ai-service
+    restart: unless-stopped
+    environment:
+      <<: *pg_env
+      DB_NAME: ${POSTGRES_DB}
+    volumes:
+      - ./services/ai-service:/app
+    depends_on: [postgres, redis]
+    ports: ["8011:8000"]
+
+  frontend:
+    image: node:20-alpine
+    profiles: ["ui"]
+    working_dir: /app
+    command: sh -c "if [ ! -d node_modules ] || [ -z \"$(ls -A node_modules 2>/dev/null)\" ]; then npm ci || npm install; fi && npm run dev -- --host 0.0.0.0 --port 5173"
+    environment:
+      VITE_API_BASE_URL: http://gateway:8080
+    volumes:
+      - ../frontend:/app
+      - frontend_node_modules:/app/node_modules
+    depends_on:
+      - gateway
+    ports:
+      - "5173:5173"
+
+volumes:
+  postgres_data:
+  mysql_data:
+  es_data:
+  frontend_node_modules:

@@ -1,0 +1,184 @@
+import { useEffect, useState } from 'react';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+
+type CheckoutResponse = {
+  payment_id: string;
+  message: string;
+};
+
+type CartItem = {
+  id: number;
+  product_id: number;
+  name: string;
+  price: number;
+  qty: number;
+  image: string;
+};
+
+type CartResponse = {
+  service: string;
+  domain: string;
+  warning: string;
+  items: CartItem[];
+  summary: {
+    subtotal: number;
+    discount: number;
+    shipping: number;
+    total: number;
+  };
+};
+
+const formatCurrency = (value: number) => `${value.toLocaleString('vi-VN')}đ`;
+
+export function ShoppingCart() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<CartResponse | null>(null);
+  const [customerName, setCustomerName] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
+  const [customerAddress, setCustomerAddress] = useState('');
+  const [customerNote, setCustomerNote] = useState('');
+  const [checkoutStatus, setCheckoutStatus] = useState('');
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  useEffect(() => {
+    const fetchCartStub = async () => {
+      try {
+        const response = await fetch('/api/cart/');
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const payload: CartResponse = await response.json();
+        setData(payload);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void fetchCartStub();
+  }, []);
+
+  const onCheckout = async () => {
+    if (!data) return;
+
+    setIsCheckingOut(true);
+    setCheckoutStatus('');
+
+    try {
+      const response = await fetch('/api/payments/checkout/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: data.summary.total,
+          customer: {
+            name: customerName,
+            phone: customerPhone,
+            email: customerEmail,
+            address: customerAddress,
+            note: customerNote,
+          },
+        }),
+      });
+
+      const payload = (await response.json()) as CheckoutResponse | { detail: string };
+      if (!response.ok) {
+        throw new Error('detail' in payload ? payload.detail : 'Thanh toán thất bại');
+      }
+
+      if (!('payment_id' in payload) || !('message' in payload)) {
+        throw new Error('Phản hồi thanh toán không hợp lệ.');
+      }
+
+      setCheckoutStatus(`${payload.message} - Mã thanh toán: ${payload.payment_id}`);
+    } catch (err) {
+      setCheckoutStatus(err instanceof Error ? err.message : 'Có lỗi xảy ra khi thanh toán');
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
+
+  return (
+    <main className="container mx-auto px-4 py-16">
+      <h1 className="text-3xl font-bold mb-4">Giỏ hàng</h1>
+      <p className="text-muted-foreground mb-6">Dữ liệu đang lấy từ Cart Service qua API Gateway.</p>
+
+      <section className="rounded-xl border border-border bg-card p-4">
+        <h2 className="text-lg font-semibold mb-3">Kết nối backend (Cart Service)</h2>
+
+        {isLoading && <p className="text-sm text-muted-foreground">Đang gọi /api/cart/ ...</p>}
+
+        {!isLoading && error && (
+          <p className="text-sm text-destructive">
+            Không kết nối được backend: {error}. Hãy chạy backend bằng docker compose.
+          </p>
+        )}
+
+        {!isLoading && data && (
+          <div className="space-y-4 text-sm">
+            <p className="rounded-md bg-amber-50 px-3 py-2 text-amber-800 dark:bg-amber-950/30 dark:text-amber-300">
+              {data.warning}
+            </p>
+
+            <div className="space-y-3">
+              {data.items.map((item) => (
+                <div key={item.id} className="flex items-center gap-3 rounded-lg border border-border p-3">
+                  <img src={item.image} alt={item.name} className="h-14 w-14 rounded object-cover" />
+                  <div className="flex-1">
+                    <p className="font-medium">{item.name}</p>
+                    <p className="text-xs text-muted-foreground">SL: {item.qty}</p>
+                  </div>
+                  <p className="font-semibold text-primary">{formatCurrency(item.price * item.qty)}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="rounded-lg border border-border p-3 space-y-1">
+              <div className="flex justify-between"><span>Tạm tính</span><span>{formatCurrency(data.summary.subtotal)}</span></div>
+              <div className="flex justify-between"><span>Giảm giá</span><span>-{formatCurrency(data.summary.discount)}</span></div>
+              <div className="flex justify-between"><span>Phí ship</span><span>{formatCurrency(data.summary.shipping)}</span></div>
+              <div className="mt-2 border-t border-border pt-2 flex justify-between font-semibold text-base">
+                <span>Tổng cộng</span><span className="text-primary">{formatCurrency(data.summary.total)}</span>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-border p-4 space-y-3">
+              <h3 className="text-base font-semibold">Thông tin customer thanh toán</h3>
+              <div className="grid gap-3 md:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-xs text-muted-foreground">Họ tên</label>
+                  <Input value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Nguyễn Văn A" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs text-muted-foreground">Số điện thoại</label>
+                  <Input value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} placeholder="0901234567" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs text-muted-foreground">Email</label>
+                  <Input value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder="customer@example.com" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs text-muted-foreground">Địa chỉ nhận hàng</label>
+                  <Input value={customerAddress} onChange={(e) => setCustomerAddress(e.target.value)} placeholder="123 Lý Thường Kiệt, Q10" />
+                </div>
+              </div>
+              <div>
+                <label className="mb-1 block text-xs text-muted-foreground">Ghi chú</label>
+                <Input value={customerNote} onChange={(e) => setCustomerNote(e.target.value)} placeholder="Giao giờ hành chính" />
+              </div>
+
+              <Button onClick={onCheckout} disabled={isCheckingOut}>
+                {isCheckingOut ? 'Đang xử lý...' : 'Thanh toán ngay'}
+              </Button>
+
+              {checkoutStatus && <p className="text-sm text-primary">{checkoutStatus}</p>}
+            </div>
+          </div>
+        )}
+      </section>
+    </main>
+  );
+}
