@@ -30,7 +30,7 @@ flowchart TB
     end
     
     subgraph ACL["ACL"]
-        ACL[ACL Adapter]
+        ACL_ADAPTER[ACL Adapter]
     end
     
     CATALOG_Context -->|ProductCreated| KAFKA
@@ -41,8 +41,8 @@ flowchart TB
     CATALOG_Context -.-> REST
     REST -.-> INVENTORY_Context
     
-    INV_SVC -.-> ACL
-    ACL -.-> CAT_SVC
+    INV_SVC -.-> ACL_ADAPTER
+    ACL_ADAPTER -.-> CAT_SVC
     
     SHARED[("Shared Kernel Product ID")]
     CAT_SVC --- SHARED
@@ -51,10 +51,10 @@ flowchart TB
     classDef primary fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
     classDef downstream fill:#ffebee,stroke:#c62828,stroke-width:2px
     classDef kafka fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-    classDef acl fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    classDef acl_style fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
     classDef shared fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     
     class Catalog_Context,CAT_SVC,CAT_API primary
     class Inventory_Context,INV_SVC,INV_API downstream
-    class KAFKA kafka
-    class ACL ac
+    class KAFKA,KAFKA_style kafka
+    class ACL_ADAPTER acl_style
