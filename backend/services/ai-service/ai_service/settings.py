@@ -72,6 +72,19 @@ if DB_ENGINE == 'django.db.backends.mysql':
     import pymysql
     pymysql.install_as_MySQLdb()
 
+# Neo4j Configuration
+NEO4J_URI = os.getenv('NEO4J_URI', 'bolt://neo4j:7687')
+NEO4J_USER = os.getenv('NEO4J_USER', 'neo4j')
+NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD', 'testpassword')
+import neomodel.config
+neomodel.config.DATABASE_URL = f"bolt://{NEO4J_USER}:{NEO4J_PASSWORD}@{NEO4J_URI.replace('bolt://', '')}"
+
+# Kafka Configuration
+KAFKA_BOOTSTRAP_SERVERS = os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'kafka:9092')
+
+# Gemini Configuration
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
+
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True

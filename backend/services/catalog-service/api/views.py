@@ -1,10 +1,12 @@
 import json
+import logging
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
+logger = logging.getLogger(__name__)
 
 PRODUCTS = [
     {
@@ -143,12 +145,17 @@ def _format_product(product):
     }
 
 
-def _post_json(url, payload, timeout=0.2):
+def _get_json(url, timeout=2.0):
+    req = Request(url, headers={"Content-Type": "application/json"})
+    with urlopen(req, timeout=timeout) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def _post_json(url, payload, timeout=2.0):
     req = Request(
         url,
         data=json.dumps(payload).encode("utf-8"),
         headers={"Content-Type": "application/json"},
-        method="POST",
     )
     with urlopen(req, timeout=timeout) as response:
         return json.loads(response.read().decode("utf-8"))
@@ -197,28 +204,23 @@ def product_home_recommend(request, user_id):
     fallback = _top_products_local(preferred_category, limit=4)
 
     try:
-        ai_result = _post_json(
-            f"{AI_BASE_URL}/recommend/{user_id}/",
-            {
-                "session_id": payload.get("session_id"),
-                "preferred_category": preferred_category,
-                "viewed_product_ids": payload.get("viewed_product_ids") or [],
-                "events": payload.get("events") or [],
-                "event_count": payload.get("event_count"),
-                "has_first_purchase": payload.get("has_first_purchase", False),
-            },
-        )
-        ordered_ids = ai_result.get("recommended_product_ids") or []
-        id_map = {item["id"]: item for item in PRODUCTS}
-        items = [id_map[item_id] for item_id in ordered_ids if item_id in id_map]
+        # Call the New AI Service API using GET
+        ai_result = _get_json(f"{AI_BASE_URL}/recommendations/{user_id}/", timeout=2.0)
+        
+        ordered_ids = ai_result.get("recommendations") or []
+        id_map = {str(item["id"]): item for item in PRODUCTS}
+        items = [id_map[str(item_id)] for item_id in ordered_ids if str(item_id) in id_map]
+        
         if not items:
             items = fallback
+            
         return JsonResponse({
             "source": "ai-service",
-            "stage": ai_result.get("stage", "unknown"),
+            "stage": "collaborative_filtering",
             "items": [_format_product(item) for item in items[:4]],
         })
-    except (URLError, TimeoutError, ValueError):
+    except Exception as e:
+        logger.error(f"Error fetching from AI service: {e}")
         return JsonResponse({
             "source": "catalog-fallback",
             "stage": "fallback_popularity",
@@ -230,19 +232,6 @@ def product_home_recommend(request, user_id):
 def product_similar(request, product_id):
     payload = request.data if hasattr(request, 'data') else {}
     limit = int(payload.get("limit") or 4)
-
-    try:
-        ai_result = _post_json(
-            f"{AI_BASE_URL}/recommend/similar/",
-            {"product_id": product_id, "limit": limit},
-        )
-        similar_ids = ai_result.get("similar_product_ids") or []
-        id_map = {item["id"]: item for item in PRODUCTS}
-        items = [id_map[item_id] for item_id in similar_ids if item_id in id_map]
-        if items:
-            return JsonResponse({"source": "ai-service", "items": [_format_product(item) for item in items]})
-    except (URLError, TimeoutError, ValueError):
-        pass
 
     seed = next((item for item in PRODUCTS if item["id"] == product_id), None)
     if not seed:

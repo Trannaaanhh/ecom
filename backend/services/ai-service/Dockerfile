@@ -5,10 +5,16 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+# Install system dependencies (needed for psycopg2 and potentially confluent-kafka/grpc)
+RUN apt-get update \
+    && apt-get install -y gcc libpq-dev \
+    && apt-get clean
+
 COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r /app/requirements.txt
 
 COPY . /app
 
-CMD ["sh", "-c", "python manage.py runserver 0.0.0.0:8000"]
-
+# Run Gunicorn in production mode
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "ai_service.wsgi:application"]
