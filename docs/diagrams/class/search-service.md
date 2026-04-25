@@ -36,15 +36,6 @@ classDiagram
         +int max_value
     }
     
-    class Facet {
-        +int id PK
-        +string facet_name
-        +string facet_value
-        +int count
-        +string facet_type
-        +int display_order
-    }
-    
     class Synonym {
         +int id PK
         +string term
@@ -55,64 +46,40 @@ classDiagram
     
     SearchQuery --> SearchResult : Composition (1..*)
     SearchQuery --> SearchFilter : Composition (0..*)
-    SearchResult --> Product : Association (1..1)
 ```
 
-```mermaid
----
-title: Database Schema - Search Service (PostgreSQL + Elasticsearch)
----
-erDiagram
-    SEARCH_QUERY {
-        int id PK
-        int user_id FK
-        string query_text
-        string search_type
-        int results_count
-        int filters_applied
-        string sort_by
-        string page
-        string sort_order
-        datetime created_at
-    }
-    
-    SEARCH_RESULT {
-        int id PK
-        int query_id FK
-        int product_id FK
-        decimal score
-        int rank
-        string highlight
-    }
-    
-    SEARCH_FILTER {
-        int id PK
-        int query_id FK
-        string filter_type
-        string filter_name
-        string filter_value
-        string filter_value_to
-        int min_value
-        int max_value
-    }
-    
-    FACET {
-        int id PK
-        string facet_name
-        string facet_value
-        int count
-        string facet_type
-        int display_order
-    }
-    
-    SYNONYM {
-        int id PK
-        string term
-        string synonyms
-        boolean is_active
-        datetime created_at
-    }
-    
-    SEARCH_QUERY ||--o{ SEARCH_RESULT : "1:*"
-    SEARCH_QUERY ||--o{ SEARCH_FILTER : "0:*"
-    SEARCH_RESULT }o--|| PRODUCT : "*:1"
+### Database Mapping (PostgreSQL + Elasticsearch)
+
+**Table: search_queries**
+- `id` (PK), `user_id` (FK) - Query identification
+- `query_text` - Search text
+- `search_type` - product, category, all
+- `results_count` - Number of results
+- `filters_applied` - Number of filters
+- `sort_by` - relevance, price, new
+- `page`, `sort_order` - Pagination
+- `created_at`
+
+**Table: search_results**
+- `id` (PK), `query_id` (FK), `product_id` (FK)
+- `score` - Elasticsearch score
+- `rank` - Display rank
+- `highlight` - Highlighted text
+
+**Table: search_filters**
+- `id` (PK), `query_id` (FK)
+- `filter_type` - price, category, brand
+- `filter_name`, `filter_value`, `filter_value_to`
+- `min_value`, `max_value` - Range filters
+
+**Table: synonyms**
+- `id` (PK)
+- `term` - Original term
+- `synonyms` - Comma-separated synonyms
+- `is_active`, `created_at`
+
+**Note:** Facet data is stored in Elasticsearch, not PostgreSQL.
+
+**Relationships:**
+- SearchQuery → SearchResult: One-to-Many (1:*)
+- SearchQuery → SearchFilter: One-to-Many (0:*)
