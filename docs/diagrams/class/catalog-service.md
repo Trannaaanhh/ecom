@@ -8,7 +8,10 @@ classDiagram
         +string name
         +string description
         +string slug
+        +string icon
         +int parent_id FK
+        +int display_order
+        +boolean is_featured
         +datetime created_at
         +datetime updated_at
     }
@@ -18,10 +21,17 @@ classDiagram
         +string name
         +string description
         +decimal price
+        +decimal discounted_price
         +string sku
         +int category_id FK
         +string image_url
+        +text images
+        +text short_description
+        +decimal weight
+        +text dimensions
         +boolean is_active
+        +boolean is_featured
+        +int stock_quantity
         +datetime created_at
         +datetime updated_at
     }
@@ -35,6 +45,9 @@ classDiagram
         +int pages
         +string isbn
         +string language
+        +string format
+        +string genre
+        +decimal weight
     }
     
     class Electronics {
@@ -45,6 +58,8 @@ classDiagram
         +string warranty_period
         +text specifications
         +string manufacturer
+        +string power_consumption
+        +string voltage
     }
     
     class Fashion {
@@ -55,6 +70,8 @@ classDiagram
         +string color
         +string material
         +string gender
+        +string style
+        +text care_instructions
     }
     
     Product <|-- Book : Inheritance
@@ -74,7 +91,10 @@ erDiagram
         string name
         string description
         string slug
+        string icon
         int parent_id FK
+        int display_order
+        boolean is_featured
         datetime created_at
         datetime updated_at
     }
@@ -84,10 +104,17 @@ erDiagram
         string name
         string description
         decimal price
+        decimal discounted_price
         string sku
         int category_id FK
         string image_url
+        text images
+        text short_description
+        decimal weight
+        text dimensions
         boolean is_active
+        boolean is_featured
+        int stock_quantity
         datetime created_at
         datetime updated_at
     }
@@ -101,6 +128,9 @@ erDiagram
         int pages
         string isbn
         string language
+        string format
+        string genre
+        decimal weight
     }
     
     ELECTRONICS {
@@ -111,6 +141,8 @@ erDiagram
         string warranty_period
         text specifications
         string manufacturer
+        string power_consumption
+        string voltage
     }
     
     FASHION {
@@ -121,6 +153,8 @@ erDiagram
         string color
         string material
         string gender
+        string style
+        text care_instructions
     }
     
     PRODUCT ||--o{ BOOK : "1:1"
