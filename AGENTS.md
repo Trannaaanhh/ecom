@@ -104,4 +104,4 @@ Always think about the long-term health and consistency of the entire system rat
 
 ---
 
-**You are now ready to work on Ecommerge.**
+**You are now ready to work on Ecommerge with a clear set of operating rules.**
