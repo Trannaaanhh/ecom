@@ -28,6 +28,16 @@ def _get_payload(request):
         return {}
 
 
+def _query_param(request, key, default=''):
+    params = getattr(request, 'query_params', None)
+    if params is not None:
+        return params.get(key, default)
+    get_data = getattr(request, 'GET', None)
+    if get_data is not None:
+        return get_data.get(key, default)
+    return default
+
+
 @api_view(['GET'])
 def health(request):
     return JsonResponse({'status': 'ok', 'service': 'ai-service'})
@@ -57,11 +67,11 @@ def get_recommendations(request, user_id):
 def recommend(request):
     payload = _get_payload(request)
     result = engine.recommend(
-        user_id=payload.get('user_id') or request.query_params.get('user_id'),
-        query=payload.get('query', '') or request.query_params.get('query', ''),
+        user_id=payload.get('user_id') or _query_param(request, 'user_id'),
+        query=payload.get('query', '') or _query_param(request, 'query', ''),
         behavior=payload.get('behavior'),
-        limit=int(payload.get('limit') or request.query_params.get('limit') or 10),
-        preferred_category=payload.get('preferred_category', '') or request.query_params.get('preferred_category', ''),
+        limit=int(payload.get('limit') or _query_param(request, 'limit') or 10),
+        preferred_category=payload.get('preferred_category', '') or _query_param(request, 'preferred_category', ''),
     )
     return JsonResponse(result)
 
@@ -124,14 +134,12 @@ def fraud_score(request):
 
 @api_view(['GET'])
 def forecast(request, product_id):
-    horizon = request.GET.get('horizon', 7)
+    horizon = _query_param(request, 'horizon', 7)
     result = engine.forecast(product_id=product_id, horizon=int(horizon or 7))
     return JsonResponse(result)
 
 
-@csrf_exempt
-@api_view(['POST'])
-def chat(request):
+def _chat_response(request):
     payload = _get_payload(request)
     message = str(payload.get('message', '')).strip()
     if not message:
@@ -147,5 +155,11 @@ def chat(request):
 
 @csrf_exempt
 @api_view(['POST'])
+def chat(request):
+    return _chat_response(request)
+
+
+@csrf_exempt
+@api_view(['POST'])
 def chatbot(request):
-    return chat(request)
+    return _chat_response(request)

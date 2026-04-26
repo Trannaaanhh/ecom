@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
+import { setCustomerSession } from '../../lib/customer-session';
 
 type CustomerLoginResponse = {
   token: string;
@@ -40,6 +41,14 @@ export function CustomerLogin() {
         throw new Error('Dữ liệu đăng nhập không hợp lệ.');
       }
 
+      setCustomerSession({
+        token: data.token,
+        user: {
+          name: data.user.name,
+          email: data.user.email,
+        },
+      });
+
       setMessage(`Xin chào ${data.user.name}, đăng nhập customer thành công.`);
       setTimeout(() => navigate('/home'), 500);
     } catch (error) {
@@ -50,7 +59,7 @@ export function CustomerLogin() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100 px-4 py-12">
+    <main className="min-h-screen bg-linear-to-br from-cyan-50 to-blue-100 px-4 py-12">
       <div className="mx-auto max-w-md">
         <Card>
           <CardHeader>

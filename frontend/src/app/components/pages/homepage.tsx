@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { Skeleton } from '../ui/skeleton';
 import { ProductArt } from './product-art';
 import { getAiBehaviorFromStorage, getAiRecommendations, getAiUserId } from '../../lib/ai-api';
+import { addCartItem } from '../../lib/cart-store';
 
 type Product = {
   id: number;
@@ -45,6 +46,31 @@ export function Homepage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [aiMeta, setAiMeta] = useState<{ model: string; query: string; userId: string } | null>(null);
 
+  const buyFeaturedProduct = (productId: string) => {
+    const product = featuredProducts.find((item) => item.id === productId);
+    if (!product) return;
+
+    addCartItem({
+      productId: Number(product.id),
+      name: product.name,
+      price: Number(String(product.price_text).replace(/[^0-9]/g, '')) || 0,
+      image: '',
+      category: '',
+      badge: product.badge,
+    });
+  };
+
+  const buyTrendingProduct = (product: Product) => {
+    addCartItem({
+      productId: product.id,
+      name: product.name,
+      price: Number(String(product.price_text).replace(/[^0-9]/g, '')) || 0,
+      image: product.image,
+      category: '',
+      badge: product.badge,
+    });
+  };
+
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -52,7 +78,7 @@ export function Homepage() {
         const userId = getAiUserId();
         const behavior = getAiBehaviorFromStorage();
 
-        const [recommendRes, categoriesRes, trendingRes, fallbackFeaturedRes] = await Promise.all([
+        const [recommendRes, categoriesRes, trendingRes, fallbackFeaturedRes, catalogRes] = await Promise.all([
           getAiRecommendations({
             userId,
             query: preferredCategory || 'homepage',
@@ -63,14 +89,20 @@ export function Homepage() {
           fetch('/api/categories/'),
           fetch('/api/products/trending/'),
           fetch('/api/products/featured/'),
+          fetch('/api/products/'),
         ]);
 
         const categoriesJson = await categoriesRes.json();
         const trendingJson = await trendingRes.json();
         const fallbackFeaturedJson = await fallbackFeaturedRes.json();
+        const catalogJson = await catalogRes.json();
+        const catalogIds = new Set(
+          ((catalogJson.items ?? []) as Array<{ id: number | string }>).map((item) => String(item.id)),
+        );
 
-        const aiFeatured = recommendRes.items.length
-          ? recommendRes.items.map((item) => ({
+        const aiCandidates = recommendRes.items
+          .filter((item) => catalogIds.has(String(item.product_id)))
+          .map((item) => ({
               id: item.product_id,
               name: item.name,
               price_text: `${item.price.toLocaleString('vi-VN')}đ`,
@@ -79,8 +111,9 @@ export function Homepage() {
               score: item.score,
               rating: item.score ? Number((4 + item.score).toFixed(1)) : 4.6,
               sold: item.score ? Math.max(20, Math.round(item.score * 1000)) : 120,
-            }))
-          : (fallbackFeaturedJson.items ?? []).map((item: Product) => ({
+            }));
+
+        const fallbackFeatured = (fallbackFeaturedJson.items ?? []).map((item: Product) => ({
               id: String(item.id),
               name: item.name,
               price_text: item.price_text,
@@ -89,6 +122,8 @@ export function Homepage() {
               rating: item.rating,
               sold: item.sold,
             }));
+
+        const aiFeatured = aiCandidates.length ? aiCandidates : fallbackFeatured;
 
         setFeaturedProducts(aiFeatured);
         setCategories(categoriesJson.items ?? []);
@@ -195,10 +230,11 @@ export function Homepage() {
                 </Card>
               ))
             : featuredProducts.map((product) => (
-                <Link key={product.id} to={`/product/${product.id}`}>
-                  <Card className="group cursor-pointer overflow-hidden border hover:shadow-xl transition-all duration-300">
+                <Card key={product.id} className="group overflow-hidden border hover:shadow-xl transition-all duration-300">
                     <div className="relative aspect-square overflow-hidden">
-                      <ProductArt name={product.name} className="h-full w-full transition-transform duration-300 group-hover:scale-105" />
+                      <Link to={`/product/${product.id}`}>
+                        <ProductArt name={product.name} className="h-full w-full transition-transform duration-300 group-hover:scale-105" />
+                      </Link>
                       {product.badge && (
                         <Badge className="absolute top-3 right-3 bg-destructive text-white">
                           {product.badge}
@@ -206,7 +242,9 @@ export function Homepage() {
                       )}
                     </div>
                     <CardContent className="p-4">
-                      <h3 className="font-medium mb-2 line-clamp-2 group-hover:text-primary transition-colors">{product.name}</h3>
+                      <Link to={`/product/${product.id}`} className="block font-medium mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                        {product.name}
+                      </Link>
                       <div className="flex items-center gap-1 mb-2">
                         <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                         <span className="text-sm font-medium">{product.rating}</span>
@@ -218,9 +256,16 @@ export function Homepage() {
                           <span className="text-sm text-muted-foreground line-through">{product.old_price_text}</span>
                         ) : null}
                       </div>
+                      <div className="mt-4 flex gap-2">
+                        <Button className="flex-1" onClick={() => buyFeaturedProduct(product.id)}>
+                          Mua hàng
+                        </Button>
+                        <Button variant="outline" className="flex-1" asChild>
+                          <Link to={`/product/${product.id}`}>Chi tiết</Link>
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
-                </Link>
               ))}
         </div>
       </section>
@@ -280,24 +325,34 @@ export function Homepage() {
                 </Card>
               ))
             : trendingProducts.map((product) => (
-                <Link key={product.id} to={`/product/${product.id}`}>
-                  <Card className="overflow-hidden hover:shadow-xl transition-all">
+                <Card key={product.id} className="overflow-hidden hover:shadow-xl transition-all">
                     <div className="flex gap-4 p-4">
-                      <div className="h-24 w-24 shrink-0 overflow-hidden rounded-lg">
-                        <ProductArt name={product.name} className="h-full w-full" />
-                      </div>
+                      <Link to={`/product/${product.id}`}>
+                        <div className="h-24 w-24 shrink-0 overflow-hidden rounded-lg">
+                          <ProductArt name={product.name} className="h-full w-full" />
+                        </div>
+                      </Link>
                       <div className="flex-1">
-                        <h3 className="font-medium mb-2 line-clamp-2">{product.name}</h3>
+                        <Link to={`/product/${product.id}`} className="font-medium mb-2 line-clamp-2 hover:text-primary transition-colors block">
+                          {product.name}
+                        </Link>
                         <div className="flex items-center gap-1 mb-2">
                           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                           <span className="text-sm font-medium">{product.rating}</span>
                           <span className="text-sm text-muted-foreground">• {product.sold} đã bán</span>
                         </div>
                         <span className="text-lg font-bold text-primary">{product.price_text}</span>
+                        <div className="mt-4 flex gap-2">
+                          <Button className="flex-1" onClick={() => buyTrendingProduct(product)}>
+                            Mua hàng
+                          </Button>
+                          <Button variant="outline" className="flex-1" asChild>
+                            <Link to={`/product/${product.id}`}>Chi tiết</Link>
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </Card>
-                </Link>
               ))}
         </div>
       </section>

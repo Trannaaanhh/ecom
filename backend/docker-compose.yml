@@ -4,18 +4,6 @@ services:
     restart: unless-stopped
     ports:
       - "8080:8080"
-    depends_on:
-      - user-service
-      - catalog-service
-      - inventory-service
-      - search-service
-      - cart-service
-      - order-service
-      - payment-service
-      - shipping-service
-      - return-review-service
-      - marketing-notification-service
-      - ai-service
 
   postgres:
     image: postgres:16-alpine

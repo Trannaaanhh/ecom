@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MessageCircle, X, Send, Sparkles } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Badge } from '../ui/badge';
 import { Card } from '../ui/card';
 import { getAiBehaviorFromStorage, getAiChatbotReply, getAiUserId } from '../../lib/ai-api';
 
@@ -18,7 +17,31 @@ export function ChatbotWidget() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isSending, setIsSending] = useState(false);
+  const [isAiServiceOnline, setIsAiServiceOnline] = useState(false);
   const userId = getAiUserId();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const checkAiHealth = async () => {
+      try {
+        const response = await fetch('/api/health/ai/');
+        if (!cancelled) {
+          setIsAiServiceOnline(response.ok);
+        }
+      } catch {
+        if (!cancelled) {
+          setIsAiServiceOnline(false);
+        }
+      }
+    };
+
+    void checkAiHealth();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleSend = async () => {
     if (!message.trim()) return;
@@ -75,18 +98,18 @@ export function ChatbotWidget() {
         >
           <MessageCircle className="w-5 h-5 mr-2" />
           <span>Hỗ trợ AI 24/7</span>
-          <Badge className="ml-2 bg-green-500 w-2 h-2 p-0 rounded-full" />
+          <span className={`ml-2 h-2 w-2 rounded-full ${isAiServiceOnline ? 'bg-green-500' : 'bg-amber-400'}`} />
         </Button>
       ) : (
-        <Card className="w-95 h-150 flex flex-col overflow-hidden shadow-2xl">
+        <Card className="w-95 h-150 flex flex-col overflow-hidden shadow-2xl border-2 border-primary/20">
           <div className="bg-linear-to-r from-primary to-secondary flex items-center justify-between p-4 text-white">
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5" />
               <div>
                 <h3 className="font-semibold">Ecomerge Assistant</h3>
                 <p className="text-xs opacity-90 flex items-center gap-1">
-                  <span className="w-2 h-2 bg-green-400 rounded-full" />
-                  Trực tuyến
+                  <span className={`w-2 h-2 rounded-full ${isAiServiceOnline ? 'bg-green-400' : 'bg-amber-300'}`} />
+                  {isAiServiceOnline ? 'AI service đã kết nối' : 'Đang chờ AI service'}
                 </p>
               </div>
             </div>
@@ -101,7 +124,11 @@ export function ChatbotWidget() {
           </div>
 
           <div className="p-4 border-b border-border">
-            <p className="text-xs text-muted-foreground">Khu vực hội thoại sẽ hiển thị tin nhắn thực khi bạn nhập bên dưới.</p>
+            <p className="text-xs text-muted-foreground">
+              {isAiServiceOnline
+                ? 'Khu vực hội thoại sẽ hiển thị tin nhắn thực khi bạn nhập bên dưới.'
+                : 'AI Service chưa phản hồi, nhưng bạn vẫn có thể thử gửi tin nhắn để kiểm tra kết nối.'}
+            </p>
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -153,6 +180,9 @@ export function ChatbotWidget() {
                 <Send className="w-4 h-4" />
               </Button>
             </div>
+            <p className="mt-2 text-[11px] text-muted-foreground">
+              Trạng thái: {isAiServiceOnline ? 'đang kết nối AI service' : 'AI service chưa kết nối'}
+            </p>
           </div>
         </Card>
       )}

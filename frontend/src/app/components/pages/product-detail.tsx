@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
 import { ProductArt } from './product-art';
 import { getSimilarProducts } from '../../lib/ai-api';
+import { addCartItem } from '../../lib/cart-store';
 
 type ProductDetailResponse = {
   id: number;
@@ -29,6 +31,7 @@ const formatCurrency = (value: number) => `${value.toLocaleString('vi-VN')}đ`;
 
 export function ProductDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [product, setProduct] = useState<ProductDetailResponse | null>(null);
   const [similarProducts, setSimilarProducts] = useState<SimilarProduct[]>([]);
@@ -48,12 +51,65 @@ export function ProductDetail() {
         localStorage.setItem('ai_event_count', String(Number(localStorage.getItem('ai_event_count') ?? '0') + 1));
         setProduct(data);
 
+        const buyNowFromUrl = new URLSearchParams(window.location.search).get('buy');
+        if (buyNowFromUrl === String(data.id)) {
+          addCartItem({
+            productId: data.id,
+            name: data.name,
+            price: Number(String(data.price_text).replace(/[^0-9]/g, '')) || 0,
+            image: data.image,
+            category: data.category,
+            badge: data.badge,
+          });
+          navigate('/cart');
+          return;
+        }
+
         setIsLoadingSimilar(true);
         try {
           const aiResponse = await getSimilarProducts(String(data.id), 6);
-          setSimilarProducts(aiResponse.items ?? []);
+          const aiItems = aiResponse.items ?? [];
+          if (aiItems.length) {
+            setSimilarProducts(aiItems);
+          } else {
+            const fallbackResponse = await fetch(`/api/products/?category=${encodeURIComponent(data.category)}`);
+            if (fallbackResponse.ok) {
+              const fallbackPayload = await fallbackResponse.json();
+              const fallbackItems = (fallbackPayload.items ?? [])
+                .filter((item: ProductDetailResponse) => item.id !== data.id)
+                .slice(0, 6)
+                .map((item: ProductDetailResponse) => ({
+                  product_id: String(item.id),
+                  name: item.name,
+                  price: Number(String(item.price_text).replace(/[^0-9]/g, '')) || 0,
+                  category_name: item.category,
+                }));
+              setSimilarProducts(fallbackItems);
+            } else {
+              setSimilarProducts([]);
+            }
+          }
         } catch {
-          setSimilarProducts([]);
+          try {
+            const fallbackResponse = await fetch(`/api/products/?category=${encodeURIComponent(data.category)}`);
+            if (fallbackResponse.ok) {
+              const fallbackPayload = await fallbackResponse.json();
+              const fallbackItems = (fallbackPayload.items ?? [])
+                .filter((item: ProductDetailResponse) => item.id !== data.id)
+                .slice(0, 6)
+                .map((item: ProductDetailResponse) => ({
+                  product_id: String(item.id),
+                  name: item.name,
+                  price: Number(String(item.price_text).replace(/[^0-9]/g, '')) || 0,
+                  category_name: item.category,
+                }));
+              setSimilarProducts(fallbackItems);
+            } else {
+              setSimilarProducts([]);
+            }
+          } catch {
+            setSimilarProducts([]);
+          }
         } finally {
           setIsLoadingSimilar(false);
         }
@@ -89,6 +145,23 @@ export function ProductDetail() {
               <span className="text-sm line-through text-muted-foreground">{product.old_price_text}</span>
             </div>
             <p className="mb-6 text-sm text-muted-foreground">{product.description}</p>
+            <div className="mb-6 flex flex-wrap gap-3">
+              <Button
+                onClick={() => {
+                  addCartItem({
+                    productId: product.id,
+                    name: product.name,
+                    price: Number(String(product.price_text).replace(/[^0-9]/g, '')) || 0,
+                    image: product.image,
+                    category: product.category,
+                    badge: product.badge,
+                  });
+                }}
+              >
+                Mua hàng
+              </Button>
+              <Button variant="outline" onClick={() => navigate('/cart')}>Xem giỏ hàng</Button>
+            </div>
             <div className="rounded-lg border border-border p-4 space-y-2">
               {Object.entries(product.specs).map(([key, value]) => (
                 <div key={key} className="flex justify-between text-sm">

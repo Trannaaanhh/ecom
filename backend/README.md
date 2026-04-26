@@ -20,6 +20,18 @@ Use `ui` profile to include frontend container:
 Frontend URL:
 - `http://localhost:5173`
 
+## Run Services Independently (single service mode)
+You can start services in isolation and they still run:
+
+- Gateway only:
+	- `docker compose up --build -d gateway`
+- Catalog only (plus required DB):
+	- `docker compose up --build -d mysql catalog-service`
+- AI only (plus required dependencies):
+	- `docker compose up --build -d postgres redis neo4j ai-service`
+
+Gateway does not hard-depend on all services anymore, so unavailable upstreams return normal proxy errors instead of blocking startup.
+
 ## Run Full Infra (Kafka/Zookeeper/Elasticsearch)
 Use `full` profile when testing event/search infrastructure:
 

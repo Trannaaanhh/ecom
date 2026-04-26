@@ -6,6 +6,7 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { BookOpen, Boxes, Factory, Home, Laptop, Package, Shirt, Smartphone, Coffee, ShieldCheck } from 'lucide-react';
 import { getAiUserId, rerankSearch } from '../../lib/ai-api';
+import { addCartItem } from '../../lib/cart-store';
 
 type ThumbnailIcon = typeof Package;
 
@@ -170,6 +171,20 @@ export function ProductListing() {
     navigate(`/products${params.toString() ? `?${params.toString()}` : ''}`);
   };
 
+  const buyNow = (productId: number) => {
+    const product = items.find((item) => item.id === productId);
+    if (!product) return;
+
+    addCartItem({
+      productId: product.id,
+      name: product.name,
+      price: Number(String(product.price_text).replace(/[^0-9]/g, '')) || 0,
+      image: product.image,
+      category: product.category,
+      badge: product.badge,
+    });
+  };
+
   return (
     <main className="container mx-auto px-4 py-16">
       <h1 className="text-3xl font-bold mb-4">Danh sách sản phẩm</h1>
@@ -217,14 +232,17 @@ export function ProductListing() {
           <p className="mb-4 text-sm text-muted-foreground">Tìm thấy {items.length} sản phẩm.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {items.map((item) => (
-              <Link key={item.id} to={`/product/${item.id}`}>
-                <Card className="overflow-hidden hover:shadow-lg transition-all">
+              <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all">
                   <div className="aspect-square">
-                    <ProductThumbnail name={item.name} category={item.category} className="h-full w-full" />
+                    <Link to={`/product/${item.id}`}>
+                      <ProductThumbnail name={item.name} category={item.category} className="h-full w-full" />
+                    </Link>
                   </div>
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between mb-2 gap-2">
-                      <h3 className="font-medium line-clamp-1">{item.name}</h3>
+                      <Link to={`/product/${item.id}`} className="font-medium line-clamp-1 hover:text-primary transition-colors">
+                        {item.name}
+                      </Link>
                       {item.badge && <Badge>{item.badge}</Badge>}
                     </div>
                     <div className="text-xs text-muted-foreground mb-2">Danh mục: {item.category}</div>
@@ -233,9 +251,16 @@ export function ProductListing() {
                       <span className="font-bold text-primary">{item.price_text}</span>
                       <span className="text-xs line-through text-muted-foreground">{item.old_price_text}</span>
                     </div>
+                    <div className="mt-4 flex gap-2">
+                      <Button className="flex-1" onClick={() => buyNow(item.id)}>
+                        Mua hàng
+                      </Button>
+                      <Button variant="outline" className="flex-1" asChild>
+                        <Link to={`/product/${item.id}`}>Chi tiết</Link>
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
-              </Link>
             ))}
           </div>
         </>

@@ -27,13 +27,27 @@ export function AiExperience() {
     setLoadingRecommend(true);
     try {
       const userId = getAiUserId();
-      const result = await getAiRecommendations({
-        userId,
-        query,
-        behavior: getAiBehaviorFromStorage(),
-        limit: 8,
+      const [result, catalogResponse] = await Promise.all([
+        getAiRecommendations({
+          userId,
+          query,
+          behavior: getAiBehaviorFromStorage(),
+          limit: 8,
+        }),
+        fetch('/api/products/'),
+      ]);
+
+      const catalogPayload = await catalogResponse.json();
+      const catalogIds = new Set(
+        ((catalogPayload.items ?? []) as Array<{ id: number | string }>).map((item) => String(item.id)),
+      );
+
+      const filteredItems = result.items.filter((item) => catalogIds.has(String(item.product_id)));
+
+      setRecommendations({
+        ...result,
+        items: filteredItems,
       });
-      setRecommendations(result);
     } finally {
       setLoadingRecommend(false);
     }
