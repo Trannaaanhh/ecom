@@ -1,177 +1,458 @@
-# Architecture Notes
+# Architecture and DDD Guide
 
-This document captures the phase-2 architecture quality criteria used to evaluate four key areas:
+This document defines the intended architecture for Ecommerge and anchors it to the code that already exists. It should be used as the reference for bounded-context decisions, service interactions, and integration patterns.
 
-- Deep Learning (2.0 points)
-- Knowledge Base Graph (2.0 points)
-- RAG (2.0 points)
-- Ecommerce Integration (1.0 point)
+## 1. Architecture stance
 
-The target quality gate is at least 6.5/7.0.
+Ecommerge is designed as a DDD-oriented microservice platform.
 
-## 1) Deep Learning (Target >= 1.8/2.0)
+Primary rules:
 
-### 1.1 Model Stack
-- Recommendation:
-	- Neural CF (GMF + MLP) for collaborative signals.
-	- Content encoder for product semantics.
-	- Hybrid score: `score = alpha*cf + beta*cb + gamma*popularity`.
-- Forecasting:
-	- Time-series forecasting API with confidence output.
-- Fraud:
-	- Real-time risk scoring endpoint with low-latency target.
+- user-facing flows should prefer synchronous requests through the gateway
+- cross-context propagation should prefer asynchronous domain events
+- each service owns its own model and persistence concerns
+- downstream contexts should not leak upstream models directly without translation
 
-### 1.2 Data and Split Policy
-- Temporal split is mandatory to avoid leakage:
-	- Train: historical window T0..Tn-2
-	- Validation: Tn-1
-	- Test: Tn
-- Implicit feedback weights:
-	- view=0.1, add_to_cart=0.5, purchase=1.0, negative skip=-0.1
+## 2. Current architecture vs target architecture
 
-### 1.3 Offline Metrics and Thresholds
-- Recommendation:
-	- NDCG@10 >= 0.34
-	- Recall@20 >= 0.42
-	- MAP@10 >= 0.22
-- Fraud:
-	- AUC >= 0.93
-	- Recall@FPR<=2% >= 0.78
-- Forecast:
-	- WAPE <= 18%
-	- P50 pinball loss <= baseline by 10%
+### Current architecture in code
 
-### 1.4 Online Metrics and Serving Gates
-- p95 latency:
-	- recommend <= 100ms
-	- rerank <= 80ms
-	- fraud <= 50ms
-	- forecast <= 500ms
-- Error rate < 1% over 5-minute windows.
+- One Django project per service
+- Nginx path-based API gateway
+- PostgreSQL for most services
+- MySQL reserved for catalog
+- Neo4j and optional Kafka in AI
+- Several services still expose scaffold endpoints
+- Some synchronous service-to-service calls already exist for AI-assisted flows
 
-### 1.5 Fallback Strategy
-- If recommendation model fails: return popularity by category.
-- If fraud model fails: assign medium risk and require step-up verification.
-- If forecast model fails: use seasonal naive baseline.
+### Target architecture
 
-## 2) Knowledge Base Graph (Target >= 1.7/2.0)
+- bounded contexts expressed through stable aggregates and domain services
+- gateway-first synchronous APIs for storefront and staff interactions
+- Kafka-based event choreography for inventory, shipping, notification, search indexing, and AI enrichment
+- explicit anti-corruption layers for Search and AI
 
-### 2.1 Graph Schema
-- Nodes:
-	- Product, Category, Brand, Attribute, AttributeValue
-- Edges:
-	- `Product -> belongs_to -> Category`
-	- `Product -> compatible_with -> Product`
-	- `Product -> frequently_bought_with -> Product`
-	- `Brand -> manufactures -> Product`
-	- `Product -> has_attribute -> AttributeValue`
+## 3. Bounded context map
 
-### 2.2 Source of Truth and Sync
-- Source of truth:
-	- Catalog DB for product/category/attribute data.
-	- Order events for co-purchase relationships.
-- Sync modes:
-	- Nightly full rebuild.
-	- Incremental updates from product/order Kafka events.
+### Core contexts
 
-### 2.3 Governance and Versioning
-- Graph version tag: `graph_version=YYYYMMDD.N`.
-- Every node/edge keeps `source`, `updated_at`, `confidence` metadata.
-- Low-confidence edges (`confidence < 0.6`) are excluded from serving.
+#### Catalog
 
-### 2.4 Quality Checks
-- Broken edge ratio < 0.5%.
-- Orphan product ratio < 0.2%.
-- Sync lag (event -> graph visible) p95 < 5 minutes.
+Owns:
 
-## 3) RAG (Target >= 1.8/2.0)
+- product master data
+- categories
+- product attributes
+- merchandising metadata
 
-### 3.1 Pipeline
-- Query understanding:
-	- intent classification + entity extraction.
-- Query expansion:
-	- generate 3 semantically equivalent variants.
-- Hybrid retrieval:
-	- dense retrieval + BM25 sparse retrieval.
-- Re-rank:
-	- cross-encoder top-k rerank.
-- Generation:
-	- LLM with context block and citation constraints.
-- Post-processing:
-	- PII redaction + policy filters + response formatting.
+Current implementation:
 
-### 3.2 Retrieval and Answer Policies
-- Retrieve top-20 candidates, rerank to top-5 context chunks.
-- Each chunk includes:
-	- `source_id`, `doc_type`, `updated_at`, `trust_level`.
-- Mandatory citation requirement:
-	- at least 1 cited source for policy/product answers.
+- demo dataset powering listing and detail flows
+- gateway routes under `/api/products/` and `/api/categories/`
 
-### 3.3 Guardrails
-- Role-based data exposure:
-	- public users cannot receive internal pricing or sensitive order internals.
-- Policy deny-list:
-	- no raw credentials, tokens, private addresses, internal fraud rules.
+Target integration:
 
-### 3.4 Evaluation Set and Targets
-- Evaluate by intent buckets:
-	- product_inquiry, policy_question, order_status, complaint, general_chat.
-- Targets:
-	- groundedness >= 0.85
-	- faithfulness >= 0.88
-	- answer_relevancy >= 0.82
-	- hallucination rate <= 3%
+- upstream for Search, Inventory, AI, and Marketing
+- emits `ProductCreated`, `ProductUpdated`, `ProductDeleted`
 
-### 3.5 Empty Retrieval Fallback
-- If no relevant chunk above threshold:
-	- return safe answer template with escalation path.
+#### Inventory
 
-## 4) Ecommerce Integration (Target >= 0.9/1.0)
+Owns:
 
-### 4.1 Integration Matrix
-- Homepage -> `POST /api/products/recommend/{user_id}`
-- Product detail -> `POST /api/ai/recommend/similar/`
-- Search -> `POST /api/ai/search/rerank/`
-- Checkout -> `POST /api/ai/fraud/score/`
-- Admin/Staff -> `GET /api/ai/forecast/{product_id}/`
-- Chat widget -> `POST /api/ai/chat/`
+- stock levels
+- reservations
+- availability
+- low-stock signals
 
-### 4.2 API Contract Versioning
-- Internal AI endpoints support version header:
-	- `X-Model-Version`, `X-Feature-Version`
-- Breaking changes require new path or explicit version bump.
+Current implementation:
 
-### 4.3 SLO and Alerting
-- SLO:
-	- Availability >= 99.9%
-	- p99 latency <= 200ms for online scoring endpoints
-	- error rate <= 1%
-- Alert triggers:
-	- p99 latency > 200ms for 10 min
-	- error rate > 1% for 5 min
-	- data drift score > threshold
+- service boundary exists
+- business logic is not implemented yet
 
-### 4.4 Rollback Runbook
-- Champion/challenger release policy:
-	- 90% champion / 10% challenger
-- Auto-rollback conditions:
-	- conversion drop > 3% relative
-	- CTR drop > 5% relative
-	- error spike above SLO
-- Rollback action:
-	- route 100% traffic to champion.
+Target integration:
 
-## 5) Acceptance Checklist (6.5+ Gate)
+- downstream of Catalog for product references
+- downstream of Order for reservation and deduction flows
+- upstream for availability views and stock alerts
 
-Project is considered >= 6.5/7 when all conditions below are true:
+#### Order
 
-- DL: temporal split + offline thresholds + fallback are documented and used.
-- KB Graph: schema + sync + governance + quality checks are documented.
-- RAG: hybrid retrieval + rerank + guardrails + eval targets are documented.
-- Ecom integration: endpoint map + SLO + rollback runbook are documented.
+Owns:
 
-Current status in this repository:
+- order aggregate
+- order lifecycle
+- order line items
+- fulfillment readiness
 
-- Endpoint integration exists for recommend/similar/rerank/fraud/forecast/chat.
-- Frontend uses recommendation and staff AI control panel.
-- AI architecture quality criteria and runbook are now documented in this file.
+Current implementation:
+
+- admin summary endpoint and stub order list
+
+Target integration:
+
+- downstream of Cart in checkout
+- upstream of Payment, Shipping, After-Sales, Marketing, and AI
+- emits `OrderCreated`, `OrderConfirmed`, `OrderShipped`, `OrderDelivered`, `OrderCanceled`
+
+#### Payment
+
+Owns:
+
+- payment intent
+- transaction state
+- payment decisioning
+- refund workflow
+
+Current implementation:
+
+- checkout validation
+- synchronous call to AI fraud scoring
+- demo payment response
+
+Target integration:
+
+- synchronous during checkout for immediate user feedback
+- optional event-driven settlement and reconciliation later
+
+#### Shipping
+
+Owns:
+
+- shipment creation
+- tracking
+- carrier allocation
+- delivery state
+
+Current implementation:
+
+- service boundary only
+
+Target integration:
+
+- downstream of Order
+- emits shipping progress events for notifications and after-sales
+
+#### After-Sales
+
+Owns:
+
+- returns
+- reviews
+- return eligibility
+- review eligibility
+
+Current implementation:
+
+- one combined `return-review-service`
+- returns and reviews exposed as separate paths
+- only scaffold responses today
+
+Target integration:
+
+- downstream of Order and Shipping
+- should evolve as one bounded context with separate subdomains if needed
+
+### Supporting contexts
+
+#### User
+
+Owns:
+
+- identity
+- authentication
+- roles
+- staff/customer access boundaries
+
+Current implementation:
+
+- customer login endpoint
+- staff login endpoint
+- demo tokens
+
+Target integration:
+
+- upstream identity provider for all user-facing services
+
+#### Search
+
+Owns:
+
+- query model
+- ranking model
+- search document representation
+
+Current implementation:
+
+- local fallback search
+- synchronous AI reranking call
+
+Target integration:
+
+- downstream consumer of Catalog and Inventory events
+- Elasticsearch-backed indexing in the `full` profile
+
+#### Marketing and Notification
+
+Owns:
+
+- promotions
+- outbound messaging
+- campaign triggers
+- notification channel orchestration
+
+Current implementation:
+
+- service boundary only
+
+Target integration:
+
+- downstream of Order, Catalog, User, and Shipping events
+
+### Specialty context
+
+#### AI and Intelligence
+
+Owns:
+
+- personalized recommendation logic
+- graph-assisted similarity
+- reranking
+- fraud scoring
+- demand forecasting
+- customer chat augmentation
+
+Current implementation:
+
+- the most complete cross-context service in the repo
+- reads and translates product and user behavior into its own model
+- stores graph relationships in Neo4j
+- can consume Kafka events when enabled
+
+Target integration:
+
+- downstream of Catalog, Order, Inventory, User, and Search
+- protected by anti-corruption layers to avoid leaking external domain models into AI internals
+
+## 4. Communication patterns
+
+### Synchronous
+
+Use synchronous APIs for:
+
+- login
+- product browsing
+- product detail
+- checkout
+- staff dashboard
+- real-time AI recommendation and chat
+
+Current synchronous flows already implemented:
+
+- frontend -> gateway -> service
+- catalog -> ai
+- search -> ai
+- payment -> ai
+
+### Asynchronous
+
+Use Kafka events for:
+
+- catalog changes to Search and AI
+- order lifecycle propagation
+- stock updates
+- marketing triggers
+- graph enrichment and model updates
+
+Current evented code already exists in AI for:
+
+- `user_activity`
+- `order_created`
+
+## 5. Anti-corruption layers
+
+ACLs are required in two important places.
+
+### Search ACL
+
+Search should translate catalog entities into search documents rather than reusing catalog DTOs directly.
+
+Minimum target document shape:
+
+- `product_id`
+- `name`
+- `category`
+- `availability`
+- `price`
+- `attributes`
+- `ranking_features`
+
+### AI ACL
+
+AI should translate cross-context data into its own graph and recommendation model.
+
+Examples already visible in code:
+
+- user behavior events normalized into `SEARCHED`, `VIEWED`, `ADDED_TO_CART`, `BOUGHT`
+- product/category data translated into graph nodes and category relationships
+- fallback product catalog materialized as AI-owned records
+
+## 6. Data ownership
+
+The following ownership rules should remain stable.
+
+- Catalog owns product master data.
+- User owns identity.
+- Order owns order state and lifecycle.
+- Payment owns transaction state.
+- Shipping owns shipment state.
+- After-Sales owns return and review state.
+- Search owns search index documents.
+- AI owns recommendation and graph representations.
+
+Cross-context references should be identifier-based, not shared mutable models.
+
+## 7. Event topology
+
+Recommended event topology for the platform:
+
+### Catalog events
+
+- `ProductCreated`
+- `ProductUpdated`
+- `ProductDeleted`
+
+Consumers:
+
+- Search reindexing
+- AI graph sync
+- Marketing promotion triggers
+
+### Order events
+
+- `OrderCreated`
+- `OrderConfirmed`
+- `OrderShipped`
+- `OrderDelivered`
+- `OrderCanceled`
+
+Consumers:
+
+- Payment
+- Inventory
+- Shipping
+- Marketing/Notification
+- After-Sales
+- AI
+
+### Inventory events
+
+- `StockReserved`
+- `StockReleased`
+- `StockLow`
+- `OutOfStock`
+- `StockRestocked`
+
+Consumers:
+
+- Catalog
+- Search
+- Marketing
+
+### User activity events
+
+- `UserViewedProduct`
+- `UserSearched`
+- `UserAddedToCart`
+- `UserPurchased`
+
+Current code equivalent:
+
+- `user_activity` topic handled by AI consumer
+
+## 8. AI architecture
+
+The current AI engine combines multiple strategies into a single scoring pipeline.
+
+### Recommendation pipeline
+
+- graph candidate generation from Neo4j
+- behavior scoring from local events or graph history
+- optional LSTM artifact contribution
+- query similarity scoring
+- popularity scoring
+- category bonus
+- weighted final score
+
+Current model label:
+
+- `hybrid-lstm-graph-rag-v1`
+
+### Search reranking pipeline
+
+- query relevance
+- user behavior
+- popularity
+- category affinity
+
+Current model label:
+
+- `search-rerank-v1`
+
+### Fraud scoring pipeline
+
+- amount-based risk
+- explicit risk flags
+- user history penalty/relief
+
+Current model label:
+
+- `fraud-rule-graph-v1`
+
+### Forecast pipeline
+
+- popularity-derived baseline
+- naive seasonal adjustment
+
+Current model label:
+
+- `forecast-naive-v1`
+
+### Chat pipeline
+
+- build recommendation-backed context
+- use Gemini if configured
+- otherwise use deterministic fallback reply
+
+Current model labels:
+
+- `gemini-1.5-flash-latest`
+- `hybrid-rag-fallback-v1`
+
+## 9. Security and operational constraints
+
+Current code is development-oriented, so these gaps should be treated explicitly:
+
+- demo secret fallbacks exist in Django settings
+- auth tokens are placeholders
+- gateway does not enforce auth
+- service-to-service calls are not authenticated
+- input validation is still thin outside checkout
+
+The architecture should move toward:
+
+- token validation owned by User context
+- least-privilege service access
+- event contracts with schema versioning
+- explicit audit points on payment, order, and AI-sensitive actions
+
+## 10. Architecture decisions for future work
+
+When implementing new features:
+
+1. decide the owning bounded context first
+2. keep user-facing orchestration synchronous where latency matters
+3. publish domain events for downstream propagation
+4. translate cross-context data through ACLs
+5. avoid moving business logic into gateway or frontend state as a substitute for domain services
+
+This architecture is only healthy if service boundaries continue to reflect business ownership, not just deployment convenience.

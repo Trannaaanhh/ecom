@@ -1,76 +1,140 @@
-# Backend + Fullstack Run Guide
+# Backend Run Guide
 
-This folder contains the Django microservices backend and Docker orchestration for Ecommerge.
+This directory contains the Django microservices backend, the Nginx API gateway, and the Docker Compose definitions used for local development.
 
-## Quick Start (lightweight default)
-1. Go to backend folder:
-	 - `cd backend`
-2. Start backend stack (without Kafka/Zookeeper/Elasticsearch):
-	 - `docker compose up --build -d`
-3. Gateway URL:
-	 - `http://localhost:8080`
+## What this stack includes
 
-Default mode is optimized for local development speed and lower resource usage.
+- `gateway`: Nginx reverse proxy on port `8080`
+- `postgres`: primary relational store for most services
+- `mysql`: catalog database
+- `redis`: shared cache / volatile store
+- `neo4j`: graph store used by AI
+- Optional `zookeeper`, `kafka`, `elasticsearch` in the `full` profile
+- Optional `frontend` container in the `ui` profile
 
-## Run Frontend + Backend Together (Docker)
-Use `ui` profile to include frontend container:
+## Prerequisites
 
-- `docker compose --profile ui up --build -d`
+- Docker Desktop with Compose support
+- Available local ports:
+  `8080`, `5432`, `3306`, `6379`, `7474`, `7687`, and optionally `2181`, `9092`, `9200`, `5173`
+- A backend `.env` file with database credentials and optional AI keys
+
+Environment details are documented in [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md).
+
+## Default local stack
+
+Start the lightweight backend stack:
+
+```bash
+cd backend
+docker compose up --build -d
+```
+
+This mode starts:
+
+- gateway
+- postgres
+- mysql
+- redis
+- neo4j
+- all Django services
+
+It does not start:
+
+- zookeeper
+- kafka
+- elasticsearch
+- frontend container
+
+Useful URLs:
+
+- Gateway: `http://localhost:8080`
+- Gateway health: `http://localhost:8080/health`
+- Gateway AI health proxy: `http://localhost:8080/api/health/ai/`
+
+## Full infrastructure profile
+
+Start backend plus event/search infrastructure:
+
+```bash
+docker compose --profile full up --build -d
+```
+
+Use this when testing:
+
+- Kafka consumer behavior in AI
+- event-driven integration design
+- Elasticsearch-dependent search evolution
+
+## Frontend in the same compose stack
+
+Start backend plus frontend:
+
+```bash
+docker compose --profile ui up --build -d
+```
+
+Start everything:
+
+```bash
+docker compose --profile ui --profile full up --build -d
+```
 
 Frontend URL:
+
 - `http://localhost:5173`
 
-## Run Services Independently (single service mode)
-You can start services in isolation and they still run:
+Inside Docker, frontend proxies API calls to `http://gateway:8080`.
 
-- Gateway only:
-	- `docker compose up --build -d gateway`
-- Catalog only (plus required DB):
-	- `docker compose up --build -d mysql catalog-service`
-- AI only (plus required dependencies):
-	- `docker compose up --build -d postgres redis neo4j ai-service`
+## Independent service mode
 
-Gateway does not hard-depend on all services anymore, so unavailable upstreams return normal proxy errors instead of blocking startup.
+You can start only the pieces needed for a debugging session:
 
-## Run Full Infra (Kafka/Zookeeper/Elasticsearch)
-Use `full` profile when testing event/search infrastructure:
+```bash
+docker compose up --build -d gateway
+docker compose up --build -d mysql catalog-service
+docker compose up --build -d postgres redis neo4j ai-service
+```
 
-- `docker compose --profile full up --build -d`
+This is useful because the gateway does not hard-block on every upstream being available.
 
-Run everything (backend + frontend + full infra):
+## Frontend local dev modes
 
-- `docker compose --profile ui --profile full up --build -d`
+When running frontend outside backend Compose:
 
-## Useful Commands
-- Check containers:
-	- `docker compose ps`
-- Follow logs:
-	- `docker compose logs -f`
-- Stop and remove:
-	- `docker compose down`
+```bash
+cd frontend
+npm install
+npm run dev:customer
+```
 
-## Frontend Login Split (Customer/Staff)
-From `frontend` folder, run separate local login apps:
+Other modes:
 
-- Customer login (`localhost:5173`):
-	- `npm run dev:customer`
-- Staff login (`localhost:5174`):
-	- `npm run dev:staff`
-- Optional role selector page (`localhost:5173/select`):
-	- `npm run dev:portal`
+- `npm run dev:staff`
+- `npm run dev:portal`
 
-Auth APIs used:
-- `POST /api/users/customer/login/`
-- `POST /api/users/staff/login/`
+By default, Vite proxies `/api/*` to `VITE_API_BASE_URL`, which falls back to `http://localhost:8080`.
 
-Backend service for both customer and staff auth:
-- `backend/services/user-service`
-- Customer login handler: `api/users/customer/login/`
-- Staff login handler: `api/users/staff/login/`
+## Operational commands
 
-Checkout API with customer info:
-- `POST /api/payments/checkout/`
+Check container status:
 
-## Health Checks
-- Gateway: `http://localhost:8080/health`
-- Service direct: `http://localhost:<port>/health`
+```bash
+docker compose ps
+```
+
+Follow logs:
+
+```bash
+docker compose logs -f
+```
+
+Stop the stack:
+
+```bash
+docker compose down
+```
+
+## Current implementation note
+
+Not every service has full business logic yet. Several services still return scaffold responses intended to keep gateway routing, frontend wiring, and architecture development moving in parallel. The current status by service is documented in [docs/API_REFERENCE.md](docs/API_REFERENCE.md).
