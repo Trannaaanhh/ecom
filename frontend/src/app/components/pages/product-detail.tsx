@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Badge } from '../ui/badge';
 import { ProductArt } from './product-art';
+import { getSimilarProducts } from '../../lib/ai-api';
 
 type ProductDetailResponse = {
   id: number;
@@ -17,10 +18,21 @@ type ProductDetailResponse = {
   specs: Record<string, string>;
 };
 
+type SimilarProduct = {
+  product_id: string;
+  name: string;
+  price: number;
+  category_name: string;
+};
+
+const formatCurrency = (value: number) => `${value.toLocaleString('vi-VN')}đ`;
+
 export function ProductDetail() {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [product, setProduct] = useState<ProductDetailResponse | null>(null);
+  const [similarProducts, setSimilarProducts] = useState<SimilarProduct[]>([]);
+  const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -35,6 +47,16 @@ export function ProductDetail() {
         localStorage.setItem('last_seen_category', data.category ?? '');
         localStorage.setItem('ai_event_count', String(Number(localStorage.getItem('ai_event_count') ?? '0') + 1));
         setProduct(data);
+
+        setIsLoadingSimilar(true);
+        try {
+          const aiResponse = await getSimilarProducts(String(data.id), 6);
+          setSimilarProducts(aiResponse.items ?? []);
+        } catch {
+          setSimilarProducts([]);
+        } finally {
+          setIsLoadingSimilar(false);
+        }
       }
       setIsLoading(false);
     };
@@ -74,6 +96,29 @@ export function ProductDetail() {
                   <span className="font-medium">{value}</span>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-8 rounded-xl border border-border p-4">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-lg font-semibold">Sản phẩm tương tự từ AI</h3>
+                <span className="text-xs text-muted-foreground">Dựa trên mô hình tương đồng sản phẩm</span>
+              </div>
+
+              {isLoadingSimilar ? (
+                <p className="mt-3 text-sm text-muted-foreground">Đang tải gợi ý tương tự...</p>
+              ) : similarProducts.length ? (
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {similarProducts.map((item) => (
+                    <div key={item.product_id} className="rounded-lg border border-border p-3">
+                      <p className="font-medium line-clamp-2">{item.name}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">{item.category_name}</p>
+                      <p className="mt-2 text-sm font-semibold text-primary">{formatCurrency(item.price)}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-3 text-sm text-muted-foreground">Chưa có gợi ý tương tự cho sản phẩm này.</p>
+              )}
             </div>
           </div>
         </section>

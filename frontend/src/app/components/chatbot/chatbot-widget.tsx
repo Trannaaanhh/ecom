@@ -4,6 +4,7 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Badge } from '../ui/badge';
 import { Card } from '../ui/card';
+import { getAiBehaviorFromStorage, getAiChatbotReply, getAiUserId } from '../../lib/ai-api';
 
 type ChatMessage = {
   id: number;
@@ -17,6 +18,7 @@ export function ChatbotWidget() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isSending, setIsSending] = useState(false);
+  const userId = getAiUserId();
 
   const handleSend = async () => {
     if (!message.trim()) return;
@@ -34,17 +36,11 @@ export function ChatbotWidget() {
 
     try {
       setIsSending(true);
-      const response = await fetch('/api/ai/chat/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: currentMessage }),
+      const payload = await getAiChatbotReply({
+        userId,
+        message: currentMessage,
+        behavior: getAiBehaviorFromStorage(),
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      const payload = await response.json();
       setMessages((prev) => [
         ...prev,
         {

@@ -6,6 +6,7 @@ import { Badge } from '../ui/badge';
 import { Link } from 'react-router-dom';
 import { Skeleton } from '../ui/skeleton';
 import { ProductArt } from './product-art';
+import { getAiBehaviorFromStorage, getAiRecommendations, getAiUserId } from '../../lib/ai-api';
 
 type Product = {
   id: number;
@@ -18,10 +19,15 @@ type Product = {
   image: string;
 };
 
-type RecommendationResponse = {
-  source: string;
-  stage: string;
-  items: Product[];
+type AiFeaturedProduct = {
+  id: string;
+  name: string;
+  price_text: string;
+  old_price_text: string;
+  badge?: string;
+  score?: number;
+  rating: number;
+  sold: number;
 };
 
 type Category = {
@@ -34,47 +40,63 @@ type Category = {
 
 export function Homepage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<AiFeaturedProduct[]>([]);
   const [trendingProducts, setTrendingProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [aiMeta, setAiMeta] = useState<{ source: string; stage: string; eventCount: number } | null>(null);
+  const [aiMeta, setAiMeta] = useState<{ model: string; query: string; userId: string } | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const viewedProductIds = JSON.parse(localStorage.getItem('viewed_product_ids') ?? '[]') as number[];
-        const eventCount = Number(localStorage.getItem('ai_event_count') ?? '0');
         const preferredCategory = localStorage.getItem('last_seen_category') ?? '';
+        const userId = getAiUserId();
+        const behavior = getAiBehaviorFromStorage();
 
         const [recommendRes, categoriesRes, trendingRes, fallbackFeaturedRes] = await Promise.all([
-          fetch('/api/products/recommend/101/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              session_id: 'session-customer-demo',
-              preferred_category: preferredCategory,
-              viewed_product_ids: viewedProductIds,
-              event_count: eventCount,
-              has_first_purchase: false,
-            }),
+          getAiRecommendations({
+            userId,
+            query: preferredCategory || 'homepage',
+            preferredCategory,
+            behavior,
+            limit: 8,
           }),
           fetch('/api/categories/'),
           fetch('/api/products/trending/'),
           fetch('/api/products/featured/'),
         ]);
 
-        const recommendJson = (await recommendRes.json()) as RecommendationResponse;
         const categoriesJson = await categoriesRes.json();
         const trendingJson = await trendingRes.json();
         const fallbackFeaturedJson = await fallbackFeaturedRes.json();
 
-        setFeaturedProducts(recommendJson.items?.length ? recommendJson.items : (fallbackFeaturedJson.items ?? []));
+        const aiFeatured = recommendRes.items.length
+          ? recommendRes.items.map((item) => ({
+              id: item.product_id,
+              name: item.name,
+              price_text: `${item.price.toLocaleString('vi-VN')}đ`,
+              old_price_text: '',
+              badge: item.score !== undefined ? `AI ${Math.round(item.score * 100)}%` : undefined,
+              score: item.score,
+              rating: item.score ? Number((4 + item.score).toFixed(1)) : 4.6,
+              sold: item.score ? Math.max(20, Math.round(item.score * 1000)) : 120,
+            }))
+          : (fallbackFeaturedJson.items ?? []).map((item: Product) => ({
+              id: String(item.id),
+              name: item.name,
+              price_text: item.price_text,
+              old_price_text: item.old_price_text,
+              badge: item.badge,
+              rating: item.rating,
+              sold: item.sold,
+            }));
+
+        setFeaturedProducts(aiFeatured);
         setCategories(categoriesJson.items ?? []);
         setTrendingProducts(trendingJson.items ?? []);
         setAiMeta({
-          source: recommendJson.source ?? 'catalog-fallback',
-          stage: recommendJson.stage ?? 'unknown',
-          eventCount,
+          model: recommendRes.model,
+          query: recommendRes.query,
+          userId,
         });
       } finally {
         setIsLoading(false);
@@ -141,9 +163,9 @@ export function Homepage() {
             <p className="text-muted-foreground">Được cá nhân hóa dựa trên hành vi mua sắm của bạn</p>
             {aiMeta && (
               <div className="mt-3 inline-flex flex-wrap gap-2 rounded-lg border border-border bg-card px-3 py-2 text-xs text-muted-foreground">
-                <span>Nguồn: {aiMeta.source}</span>
-                <span>Stage: {aiMeta.stage}</span>
-                <span>Sự kiện hành vi: {aiMeta.eventCount}</span>
+                <span>Model: {aiMeta.model}</span>
+                <span>Query: {aiMeta.query}</span>
+                <span>User: {aiMeta.userId}</span>
               </div>
             )}
           </div>
@@ -192,7 +214,9 @@ export function Homepage() {
                       </div>
                       <div className="flex items-baseline gap-2">
                         <span className="text-xl font-bold text-primary">{product.price_text}</span>
-                        <span className="text-sm text-muted-foreground line-through">{product.old_price_text}</span>
+                        {product.old_price_text ? (
+                          <span className="text-sm text-muted-foreground line-through">{product.old_price_text}</span>
+                        ) : null}
                       </div>
                     </CardContent>
                   </Card>

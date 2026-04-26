@@ -1,7 +1,12 @@
 import os
+from importlib.util import find_spec
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+def _module_available(module_name):
+    return find_spec(module_name) is not None
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key')
 DEBUG = os.getenv('DEBUG', '1') == '1'
@@ -14,13 +19,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
-    'rest_framework',
-    'api',
 ]
 
+if _module_available('corsheaders'):
+    INSTALLED_APPS.append('corsheaders')
+
+if _module_available('rest_framework'):
+    INSTALLED_APPS.append('rest_framework')
+
+INSTALLED_APPS.append('api')
+
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -29,6 +38,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if _module_available('corsheaders'):
+    MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
 
 ROOT_URLCONF = 'ai_service.urls'
 
@@ -76,14 +88,21 @@ if DB_ENGINE == 'django.db.backends.mysql':
 NEO4J_URI = os.getenv('NEO4J_URI', 'bolt://neo4j:7687')
 NEO4J_USER = os.getenv('NEO4J_USER', 'neo4j')
 NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD', 'testpassword')
-import neomodel.config
-neomodel.config.DATABASE_URL = f"bolt://{NEO4J_USER}:{NEO4J_PASSWORD}@{NEO4J_URI.replace('bolt://', '')}"
+try:
+    import neomodel.config
+
+    neomodel.config.DATABASE_URL = f"bolt://{NEO4J_USER}:{NEO4J_PASSWORD}@{NEO4J_URI.replace('bolt://', '')}"
+except Exception:
+    pass
 
 # Kafka Configuration
 KAFKA_BOOTSTRAP_SERVERS = os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'kafka:9092')
 
 # Gemini Configuration
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
+
+# Local trained recommendation model
+LSTM_MODEL_PATH = os.getenv('LSTM_MODEL_PATH', '/app/training-data/lstm_ecom_trained_full.pth')
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'

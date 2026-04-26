@@ -8,6 +8,7 @@ import { AuthSelector } from './components/pages/auth-selector';
 import { CustomerLogin } from './components/pages/customer-login';
 import { StaffLogin } from './components/pages/staff-login';
 import { StaffDashboard } from './components/pages/staff-dashboard';
+import { AiExperience } from './components/pages/ai-experience';
 
 export function Router() {
   const appRole = (import.meta.env.VITE_APP_ROLE || 'customer') as 'customer' | 'staff' | 'portal';
@@ -24,6 +25,7 @@ export function Router() {
       <Route path="/home" element={<Homepage />} />
       <Route path="/products" element={<ProductListing />} />
       <Route path="/product/:id" element={<ProductDetail />} />
+      <Route path="/ai" element={<AiExperience />} />
       <Route path="/cart" element={<ShoppingCart />} />
       <Route path="/admin" element={<AdminDashboard />} />
     </Routes>

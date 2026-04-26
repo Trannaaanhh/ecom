@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { BarChart3, BellRing, Boxes, ClipboardList, LogOut, ShieldCheck, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '../ui/button';
+import { getAiForecast, getAiFraudScore, getAiRecommendations, getAiUserId } from '../../lib/ai-api';
 
 type AdminSummary = {
   kpis: {
@@ -14,23 +15,23 @@ type AdminSummary = {
 };
 
 type AiForecast = {
-  product_id: number;
-  projected_units_next_7_days: number;
-  confidence: number;
   model: string;
+  product_id: string;
+  horizon: number;
+  forecast: Array<{ day: number; predicted_units: number }>;
 };
 
 type AiFraud = {
+  model: string;
   fraud_score: number;
   risk_level: 'low' | 'medium' | 'high';
   requires_manual_review: boolean;
-  model: string;
 };
 
 type AiRecommend = {
-  stage: string;
   model: string;
-  recommended_product_ids: number[];
+  query: string;
+  recommendations: string[];
 };
 
 const formatCurrency = (value: number) => `${value.toLocaleString('vi-VN')}đ`;
@@ -43,31 +44,23 @@ export function StaffDashboard() {
 
   useEffect(() => {
     const load = async () => {
-      const [summaryResponse, forecastResponse, fraudResponse, recommendResponse] = await Promise.all([
+      const [summaryResponse, forecastPayload, fraudPayload, recommendPayload] = await Promise.all([
         fetch('/api/orders/admin-summary/'),
-        fetch('/api/ai/forecast/1/'),
-        fetch('/api/ai/fraud/score/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ amount: 46000000, risk_flags: ['new_device', 'ip_velocity'] }),
-        }),
-        fetch('/api/ai/recommend/101/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            session_id: 'staff-monitor-session',
-            preferred_category: 'phone',
-            viewed_product_ids: [1, 3],
-            event_count: 2,
-            has_first_purchase: false,
-          }),
+        getAiForecast('1', 7),
+        getAiFraudScore({ amount: 46000000, riskFlags: ['new_device', 'ip_velocity'], userId: getAiUserId() }),
+        getAiRecommendations({
+          userId: getAiUserId(),
+          query: 'staff-monitor-session',
+          preferredCategory: 'phone',
+          behavior: [
+            { product_id: '1', action: 'view' },
+            { product_id: '3', action: 'view' },
+          ],
+          limit: 5,
         }),
       ]);
 
       const payload: AdminSummary = await summaryResponse.json();
-      const forecastPayload: AiForecast = await forecastResponse.json();
-      const fraudPayload: AiFraud = await fraudResponse.json();
-      const recommendPayload: AiRecommend = await recommendResponse.json();
 
       setData(payload);
       setAiForecast(forecastPayload);
@@ -198,17 +191,18 @@ export function StaffDashboard() {
                 <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
                   <div className="rounded-lg border border-slate-200 p-3">
                     <p className="text-xs text-slate-500">Recommendation Stage</p>
-                    <p className="mt-1 text-base font-semibold text-slate-900">{aiRecommend?.stage ?? 'n/a'}</p>
+                    <p className="mt-1 text-base font-semibold text-slate-900">{aiRecommend ? `${aiRecommend.recommendations.length} gợi ý` : 'n/a'}</p>
                     <p className="mt-1 text-xs text-slate-500">Model: {aiRecommend?.model ?? 'n/a'}</p>
-                    <p className="mt-1 text-xs text-slate-500">Top IDs: {(aiRecommend?.recommended_product_ids ?? []).join(', ') || 'n/a'}</p>
+                    <p className="mt-1 text-xs text-slate-500">Query: {aiRecommend?.query ?? 'n/a'}</p>
+                    <p className="mt-1 text-xs text-slate-500">Top IDs: {aiRecommend?.recommendations.join(', ') || 'n/a'}</p>
                   </div>
 
                   <div className="rounded-lg border border-slate-200 p-3">
                     <p className="text-xs text-slate-500">Demand Forecast</p>
                     <p className="mt-1 text-base font-semibold text-slate-900">
-                      {aiForecast ? `${aiForecast.projected_units_next_7_days} units/7 ngày` : 'n/a'}
+                      {aiForecast?.forecast?.length ? `${aiForecast.forecast[0].predicted_units} units/ngày` : 'n/a'}
                     </p>
-                    <p className="mt-1 text-xs text-slate-500">Confidence: {aiForecast ? `${Math.round(aiForecast.confidence * 100)}%` : 'n/a'}</p>
+                    <p className="mt-1 text-xs text-slate-500">Horizon: {aiForecast?.horizon ? `${aiForecast.horizon} ngày` : 'n/a'}</p>
                     <p className="mt-1 text-xs text-slate-500">Model: {aiForecast?.model ?? 'n/a'}</p>
                   </div>
 

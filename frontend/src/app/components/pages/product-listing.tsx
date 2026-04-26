@@ -5,6 +5,7 @@ import { Badge } from '../ui/badge';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { BookOpen, Boxes, Factory, Home, Laptop, Package, Shirt, Smartphone, Coffee, ShieldCheck } from 'lucide-react';
+import { getAiUserId, rerankSearch } from '../../lib/ai-api';
 
 type ThumbnailIcon = typeof Package;
 
@@ -110,6 +111,10 @@ export function ProductListing() {
       if (category) params.set('category', category);
       if (q) params.set('q', q);
 
+      if (q.trim()) {
+        localStorage.setItem('last_search_query', q.trim());
+      }
+
       const [productsRes, categoriesRes] = await Promise.all([
         fetch(`/api/products/${params.toString() ? `?${params.toString()}` : ''}`),
         fetch('/api/categories/'),
@@ -118,7 +123,32 @@ export function ProductListing() {
       const productsData = await productsRes.json();
       const categoriesData = await categoriesRes.json();
 
-      setItems(productsData.items ?? []);
+      const baseItems: Product[] = productsData.items ?? [];
+
+      if (q.trim() && baseItems.length > 1) {
+        try {
+          const aiResponse = await rerankSearch({
+            userId: getAiUserId(),
+            query: q.trim(),
+            preferredCategory: category ?? undefined,
+            resultIds: baseItems.map((item) => item.id),
+            limit: baseItems.length,
+          });
+
+          const byId = new Map(baseItems.map((item) => [String(item.id), item]));
+          const reranked = aiResponse.reranked_ids
+            .map((itemId) => byId.get(String(itemId)))
+            .filter((item): item is Product => Boolean(item));
+          const remaining = baseItems.filter((item) => !reranked.some((ranked) => ranked.id === item.id));
+
+          setItems([...reranked, ...remaining]);
+        } catch {
+          setItems(baseItems);
+        }
+      } else {
+        setItems(baseItems);
+      }
+
       setCategories(categoriesData.items ?? []);
       setIsLoading(false);
     };
