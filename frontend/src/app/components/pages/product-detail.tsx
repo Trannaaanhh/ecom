@@ -124,10 +124,10 @@ export function ProductDetail() {
 
   return (
     <main className="container mx-auto px-4 py-16">
-      <h1 className="text-3xl font-bold mb-4">Chi tiết sản phẩm</h1>
-      {isLoading && <p className="text-muted-foreground">Đang tải chi tiết sản phẩm...</p>}
+      <h1 className="text-3xl font-bold mb-4">Product Details</h1>
+      {isLoading && <p className="text-muted-foreground">Loading product details...</p>}
 
-      {!isLoading && !product && <p className="text-destructive">Không tìm thấy sản phẩm.</p>}
+      {!isLoading && !product && <p className="text-destructive">Product not found.</p>}
 
       {!isLoading && product && (
         <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -173,8 +173,8 @@ export function ProductDetail() {
 
             <div className="mt-8 rounded-xl border border-border p-4">
               <div className="flex items-center justify-between gap-3">
-                <h3 className="text-lg font-semibold">Sản phẩm tương tự từ AI</h3>
-                <span className="text-xs text-muted-foreground">Dựa trên mô hình tương đồng sản phẩm</span>
+                <h3 className="text-lg font-semibold">Similar Products from AI</h3>
+                <span className="text-xs text-muted-foreground">Based on product similarity model</span>
               </div>
 
               {isLoadingSimilar ? (
@@ -190,7 +190,7 @@ export function ProductDetail() {
                   ))}
                 </div>
               ) : (
-                <p className="mt-3 text-sm text-muted-foreground">Chưa có gợi ý tương tự cho sản phẩm này.</p>
+                <p className="mt-3 text-sm text-muted-foreground">No similar recommendations available for this product.</p>
               )}
             </div>
           </div>

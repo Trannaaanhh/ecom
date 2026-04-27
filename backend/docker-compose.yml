@@ -232,7 +232,7 @@ services:
       NEO4J_PASSWORD: testpassword
     volumes:
       - ./services/ai-service:/app
-      - "../train data:/app/training-data:ro"
+      - "../training-data:/app/training-data:ro"
     depends_on: [postgres, redis, neo4j]
     ports: ["8011:8000"]
 

@@ -74,7 +74,7 @@ export function Header() {
 
             <nav className="hidden items-center gap-6 md:flex">
               <Link to="/products" className="text-sm font-medium transition-colors hover:text-primary">
-                Danh muc
+                Categories
               </Link>
               <Link to="/products" className="flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary">
                 <Sparkles className="h-4 w-4" />
@@ -90,7 +90,7 @@ export function Header() {
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Tim kiem san pham, danh muc..."
+                placeholder="Search products, categories..."
                 className="pl-10"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -179,7 +179,7 @@ export function Header() {
               <Link to="/home">Trang chu</Link>
             </Button>
             <Button variant="outline" size="sm" asChild>
-              <Link to="/products">Danh muc</Link>
+                <Link to="/products">Categories</Link>
             </Button>
             <Button variant="outline" size="sm" onClick={() => navigate('/account')}>
               Tai khoan

@@ -106,7 +106,7 @@ LSTM_MODEL_PATH=/app/training-data/lstm_ecom_trained_full.pth
 Notes:
 
 - `GEMINI_API_KEY` is optional. Without it, AI chat uses fallback logic.
-- `LSTM_MODEL_PATH` points to the mounted model artifact from `../train data`.
+- `LSTM_MODEL_PATH` points to the mounted model artifact from `../training-data`.
 - Kafka only exists when `--profile full` is enabled.
 
 ## 6. Frontend environment variables

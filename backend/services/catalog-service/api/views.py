@@ -256,10 +256,10 @@ def product_detail(request, product_id):
         return JsonResponse({'detail': 'Product not found'}, status=404)
 
     response = _format_product(product)
-    response['description'] = 'Sản phẩm demo phục vụ kết nối frontend-backend phase 1.'
+    response['description'] = 'Demo product for frontend-backend integration in phase 1.'
     response['specs'] = {
-        'brand': 'Ecomerge Demo',
-        'warranty': '12 tháng',
+        'brand': 'Ecommerge Demo',
+        'warranty': '12 months',
         'origin': 'VN/Global',
     }
     return JsonResponse(response)

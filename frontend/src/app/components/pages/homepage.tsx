@@ -153,7 +153,7 @@ export function Homepage() {
             </Badge>
             <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6">
               Mua sắm thông minh
-              <span className="block text-white/85">theo nhóm khách hàng</span>
+              <span className="block text-white/85">by customer group</span>
             </h1>
             <p className="text-lg md:text-xl text-white/85 max-w-2xl mb-8">
               Giá B2B - Giá B2C - Giá hợp đồng. Trải nghiệm mua sắm cá nhân hóa với giao diện premium, sẵn sàng cho Vite.
@@ -273,7 +273,7 @@ export function Homepage() {
       {/* Categories Section */}
       <section className="bg-muted/30 py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8">Danh mục sản phẩm</h2>
+          <h2 className="text-3xl font-bold mb-8">Product Categories</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {isLoading
               ? Array.from({ length: 6 }).map((_, index) => (
@@ -293,7 +293,7 @@ export function Homepage() {
                       <CardContent className="p-6 text-center space-y-2">
                         <div className="text-3xl">{category.icon}</div>
                         <h3 className="font-medium group-hover:text-primary transition-colors">{category.name}</h3>
-                        <p className="text-xs text-muted-foreground">{category.count} sản phẩm</p>
+                        <p className="text-xs text-muted-foreground">{category.count} products</p>
                       </CardContent>
                     </Card>
                   </Link>

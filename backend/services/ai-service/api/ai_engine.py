@@ -58,40 +58,40 @@ FALLBACK_PRODUCTS = [
         "name": "MacBook Pro M3",
         "price": 32990000,
         "category_id": "laptop",
-        "category_name": "Laptop & Máy tính",
-        "description": "Laptop hiệu năng cao cho công việc và sáng tạo.",
+        "category_name": "Laptop & Computers",
+        "description": "High-performance laptop for work and creative tasks.",
     },
     {
         "product_id": "1",
         "name": "iPhone 15 Pro Max 256GB",
         "price": 28990000,
         "category_id": "phone",
-        "category_name": "Điện thoại & Phụ kiện",
-        "description": "Điện thoại flagship cho nhu cầu chụp ảnh và làm việc di động.",
+        "category_name": "Phones & Accessories",
+        "description": "Flagship smartphone for photography and mobile work needs.",
     },
     {
         "product_id": "5",
-        "name": "Máy giặt LG Inverter 10kg",
+        "name": "Washing Machine LG Inverter 10kg",
         "price": 41990000,
         "category_id": "home",
-        "category_name": "Thiết bị gia dụng",
-        "description": "Thiết bị gia dụng phục vụ gia đình và nhu cầu mua sỉ.",
+        "category_name": "Household Appliances",
+        "description": "Household appliances for family use and bulk purchases.",
     },
     {
         "product_id": "10",
-        "name": "Máy bơm nước công nghiệp Ebara 5HP",
+        "name": "Ebara Industrial Water Pump 5HP",
         "price": 2490000,
         "category_id": "industrial",
-        "category_name": "Thiết bị công nghiệp",
-        "description": "Thiết bị công nghiệp phù hợp công trình và nhà xưởng.",
+        "category_name": "Industrial Equipment",
+        "description": "Industrial equipment suitable for construction and factories.",
     },
     {
         "product_id": "6",
-        "name": "Cà phê hạt Arabica 1kg",
+        "name": "Arabica Coffee Beans 1kg",
         "price": 189000,
         "category_id": "food",
-        "category_name": "Thực phẩm & Đồ uống",
-        "description": "Sản phẩm tiêu dùng nhanh, phù hợp cá nhân và văn phòng.",
+        "category_name": "Food & Beverages",
+        "description": "Fast-moving consumer product, suitable for personal and office use.",
     },
 ]
 
@@ -547,13 +547,13 @@ class HybridAIEngine:
 
             reasons = []
             if behavior_score > 0:
-                reasons.append("phù hợp tín hiệu LSTM/hành vi gần đây")
+                reasons.append("matching recent LSTM/behavior signals")
             if graph_score > 0:
-                reasons.append("tương quan từ đồ thị người dùng/sản phẩm")
+                reasons.append("correlation from user/product graph")
             if rag_score > 0:
-                reasons.append("khớp ngữ nghĩa truy vấn")
+                reasons.append("semantic query match")
             if popularity_score > 0 and not reasons:
-                reasons.append("phổ biến trong hệ thống")
+                reasons.append("popular in system")
 
             scored_items.append(
                 {
@@ -697,13 +697,13 @@ class HybridAIEngine:
         if user_id:
             context_lines.append(f"Người dùng: {user_id}")
         if items:
-            context_lines.append("Sản phẩm liên quan:")
+            context_lines.append("Related products:")
             for item in items:
                 context_lines.append(
-                    f"- {item['name']} | {item['price']:,}đ | {item.get('category_name') or item.get('category_id') or 'n/a'}"
+                    f"- {item['name']} | {item['price']:,} VND | {item.get('category_name') or item.get('category_id') or 'n/a'}"
                 )
         else:
-            context_lines.append("Không tìm thấy ngữ cảnh sản phẩm đủ mạnh, hãy trả lời an toàn và gợi ý làm rõ nhu cầu.")
+            context_lines.append("Insufficient product context found. Provide a safe response and suggest clarifying customer needs.")
         return "\n".join(context_lines), items
 
     def _get_gemini_model(self):
@@ -718,18 +718,18 @@ class HybridAIEngine:
     def chat(self, user_id: Optional[str], message: str, behavior: Optional[Sequence[Dict[str, Any]]] = None) -> Dict[str, Any]:
         context, items = self._build_context(user_id, message, behavior)
         prompt = f"""
-Bạn là trợ lý tư vấn bán hàng cho hệ thống Ecommerge.
+You are a sales advisor for the Ecommerge e-commerce system.
 
-Ngữ cảnh đã truy xuất:
+Retrieved context:
 {context}
 
-Khách hàng hỏi: {message}
+Customer inquiry: {message}
 
-Yêu cầu:
-- Trả lời ngắn gọn, chuyên nghiệp, tiếng Việt tự nhiên.
-- Ưu tiên đề xuất sản phẩm từ ngữ cảnh nếu phù hợp.
-- Nếu chưa đủ dữ liệu, hãy hỏi lại một câu làm rõ hoặc đưa ra 2-3 lựa chọn an toàn.
-- Không bịa đặt thông tin không có trong ngữ cảnh.
+Requirements:
+- Provide brief, professional, natural English responses.
+- Prioritize recommending products from the context if relevant.
+- If insufficient data, ask a clarifying question or provide 2-3 safe options.
+- Do not fabricate information not present in the context.
 """.strip()
 
         model = self._get_gemini_model()

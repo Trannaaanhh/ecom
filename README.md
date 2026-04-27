@@ -19,7 +19,7 @@ This is important for onboarding: the system architecture is broader than the am
 - `frontend/`: React + Vite application.
 - `backend/`: Django microservices, gateway, Docker Compose, backend docs.
 - `backend/docs/`: architecture, API, environment, and project-level documentation.
-- `train data/`: LSTM artifact mounted into the AI service.
+- `training-data/`: LSTM artifact mounted into the AI service.
 
 ## Quick start
 

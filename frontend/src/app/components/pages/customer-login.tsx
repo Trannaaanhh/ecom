@@ -64,7 +64,7 @@ export function CustomerLogin() {
         <Card>
           <CardHeader>
             <CardTitle>Customer Login</CardTitle>
-            <CardDescription>Service khách hàng tại http://localhost:5173/</CardDescription>
+            <CardDescription>Customer service at http://localhost:5173/</CardDescription>
           </CardHeader>
           <CardContent>
             <form className="space-y-4" onSubmit={onSubmit}>

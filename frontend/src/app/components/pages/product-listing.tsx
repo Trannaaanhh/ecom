@@ -187,9 +187,9 @@ export function ProductListing() {
 
   return (
     <main className="container mx-auto px-4 py-16">
-      <h1 className="text-3xl font-bold mb-4">Danh sách sản phẩm</h1>
+      <h1 className="text-3xl font-bold mb-4">Product Listing</h1>
       <p className="text-muted-foreground mb-8">
-        {category ? `Đang lọc theo danh mục: ${category}` : 'Tất cả sản phẩm'}
+        {category ? `Filtering by category: ${category}` : 'All products'}
       </p>
 
       <div className="mb-6 space-y-4">
@@ -211,7 +211,7 @@ export function ProductListing() {
 
         <div className="flex gap-2">
           <Input
-            placeholder="Tìm theo tên sản phẩm..."
+            placeholder="Search by product name..."
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             onKeyDown={(e) => {
@@ -229,7 +229,7 @@ export function ProductListing() {
         <p className="text-sm text-muted-foreground">Đang tải dữ liệu từ Catalog Service...</p>
       ) : (
         <>
-          <p className="mb-4 text-sm text-muted-foreground">Tìm thấy {items.length} sản phẩm.</p>
+          <p className="mb-4 text-sm text-muted-foreground">Found {items.length} products.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {items.map((item) => (
               <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all">
@@ -245,7 +245,7 @@ export function ProductListing() {
                       </Link>
                       {item.badge && <Badge>{item.badge}</Badge>}
                     </div>
-                    <div className="text-xs text-muted-foreground mb-2">Danh mục: {item.category}</div>
+                    <div className="text-xs text-muted-foreground mb-2">Category: {item.category}</div>
                     <div className="text-sm text-muted-foreground mb-2">{item.rating} ★ • {item.sold} đã bán</div>
                     <div className="flex items-baseline gap-2">
                       <span className="font-bold text-primary">{item.price_text}</span>

@@ -16,12 +16,12 @@ export function AuthSelector() {
                 <UserRound className="h-5 w-5" />
                 Đăng nhập Customer
               </CardTitle>
-              <CardDescription>Dành cho khách hàng mua sắm trên hệ thống.</CardDescription>
+              <CardDescription>For customers shopping on the system.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <p className="text-sm text-slate-600">Link local: http://localhost:5173/</p>
               <Button className="w-full" asChild>
-                <a href="http://localhost:5173/">Đi tới Customer Login</a>
+                <a href="http://localhost:5173/">Go to Customer Login</a>
               </Button>
             </CardContent>
           </Card>
@@ -37,7 +37,7 @@ export function AuthSelector() {
             <CardContent className="space-y-3">
               <p className="text-sm text-slate-600">Link local: http://localhost:5174/</p>
               <Button className="w-full" variant="secondary" asChild>
-                <a href="http://localhost:5174/">Đi tới Staff Login</a>
+                <a href="http://localhost:5174/">Go to Staff Login</a>
               </Button>
             </CardContent>
           </Card>

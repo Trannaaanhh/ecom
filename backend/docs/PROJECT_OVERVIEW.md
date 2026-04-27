@@ -50,7 +50,7 @@ That distinction matters for every design and implementation decision: docs must
 - `backend/api-gateway/nginx-gateway/`: gateway configuration
 - `backend/services/`: Django microservices
 - `frontend/`: React + Vite UI
-- `train data/`: mounted LSTM model artifact for AI
+- `training-data/`: mounted LSTM model artifact for AI
 
 ## 4. Runtime architecture
 
@@ -221,7 +221,7 @@ The AI service is the richest part of the backend and already combines multiple 
 
 - graph-based candidate generation from Neo4j
 - behavior scoring from user actions
-- optional LSTM artifact loading from `train data/`
+- optional LSTM artifact loading from `training-data/`
 - query-text similarity for retrieval/reranking
 - rule-based fraud scoring
 - naive forecast baseline

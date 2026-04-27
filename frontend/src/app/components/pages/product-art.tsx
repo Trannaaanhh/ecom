@@ -64,7 +64,7 @@ function pickArt(name: string, category?: string): ArtConfig {
 
   const normalizedName = normalize(name);
   const matched = KEYWORD_MAP.find(({ keywords }) => keywords.some((keyword) => normalizedName.includes(normalize(keyword))));
-  return matched?.config ?? { icon: Package, label: 'Sản phẩm demo', gradient: 'from-slate-700 via-slate-800 to-slate-950' };
+  return matched?.config ?? { icon: Package, label: 'Demo Product', gradient: 'from-slate-700 via-slate-800 to-slate-950' };
 }
 
 export function ProductArt({ name, category, className = '' }: ProductArtProps) {

@@ -88,13 +88,13 @@ export function StaffDashboard() {
               <BarChart3 className="h-4 w-4" /> Tổng quan
             </a>
             <a className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-slate-800" href="#orders">
-              <ClipboardList className="h-4 w-4" /> Đơn hàng
+              <ClipboardList className="h-4 w-4" /> Orders
             </a>
             <a className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-slate-800" href="#inventory">
               <Boxes className="h-4 w-4" /> Kho hàng
             </a>
             <a className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-slate-800" href="#customers">
-              <Users className="h-4 w-4" /> Khách hàng
+              <Users className="h-4 w-4" /> Customers
             </a>
             <a className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-slate-800" href="#ai-control">
               <ShieldCheck className="h-4 w-4" /> AI Control
@@ -116,7 +116,7 @@ export function StaffDashboard() {
           <header className="mb-6 flex items-center justify-between rounded-xl bg-white p-4 shadow-sm">
             <div>
               <h1 className="text-2xl font-bold text-slate-900">Bảng điều khiển Staff</h1>
-              <p className="text-sm text-slate-500">Theo dõi vận hành đơn hàng, kho và hiệu suất.</p>
+              <p className="text-sm text-slate-500">Track order operations, inventory, and performance.</p>
             </div>
             <Button variant="outline">
               <BellRing className="mr-2 h-4 w-4" /> 3 thông báo mới
@@ -133,7 +133,7 @@ export function StaffDashboard() {
                   <p className="mt-1 text-2xl font-semibold text-cyan-700">{formatCurrency(data.kpis.today_revenue)}</p>
                 </div>
                 <div className="rounded-xl bg-white p-4 shadow-sm">
-                  <p className="text-xs text-slate-500">Đơn hàng mới</p>
+                  <p className="text-xs text-slate-500">New Orders</p>
                   <p className="mt-1 text-2xl font-semibold text-slate-900">{data.kpis.new_orders}</p>
                 </div>
                 <div className="rounded-xl bg-white p-4 shadow-sm">
@@ -141,13 +141,13 @@ export function StaffDashboard() {
                   <p className="mt-1 text-2xl font-semibold text-slate-900">{data.kpis.conversion_rate}%</p>
                 </div>
                 <div className="rounded-xl bg-white p-4 shadow-sm">
-                  <p className="text-xs text-slate-500">Sản phẩm tồn thấp</p>
+                  <p className="text-xs text-slate-500">Low Stock Products</p>
                   <p className="mt-1 text-2xl font-semibold text-amber-600">{data.kpis.low_stock_count}</p>
                 </div>
               </div>
 
               <div id="orders" className="rounded-xl bg-white shadow-sm overflow-hidden">
-                <div className="border-b border-slate-100 px-4 py-3 font-medium text-slate-800">Đơn hàng gần đây</div>
+                <div className="border-b border-slate-100 px-4 py-3 font-medium text-slate-800">Recent Orders</div>
                 <div className="divide-y divide-slate-100">
                   {data.recent_orders.map((order) => (
                     <div key={order.id} className="grid grid-cols-1 gap-2 px-4 py-3 text-sm md:grid-cols-[1.2fr_1fr_1fr_1fr]">
@@ -174,8 +174,8 @@ export function StaffDashboard() {
                 </div>
 
                 <div id="customers" className="rounded-xl bg-white p-4 shadow-sm">
-                  <h2 className="font-semibold text-slate-900">Khách hàng</h2>
-                  <p className="mt-2 text-sm text-slate-500">Thông tin customer hiển thị từ luồng đơn hàng gần đây.</p>
+                  <h2 className="font-semibold text-slate-900">Customers</h2>
+                  <p className="mt-2 text-sm text-slate-500">Customer info displayed from recent orders stream.</p>
                   <ul className="mt-3 space-y-1 text-sm text-slate-700">
                     {data.recent_orders.slice(0, 3).map((order) => (
                       <li key={order.id}>- {order.customer}</li>

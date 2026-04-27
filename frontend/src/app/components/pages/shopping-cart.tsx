@@ -204,7 +204,7 @@ export function ShoppingCart() {
           <div className="space-y-4 text-sm">
             {localItems.length > 0 ? (
               <p className="rounded-md bg-emerald-50 px-3 py-2 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300">
-                Sản phẩm vừa thêm đã được lưu trong giỏ cục bộ.
+                Product just added has been saved to local cart.
               </p>
             ) : (
               <p className="rounded-md bg-amber-50 px-3 py-2 text-amber-800 dark:bg-amber-950/30 dark:text-amber-300">
