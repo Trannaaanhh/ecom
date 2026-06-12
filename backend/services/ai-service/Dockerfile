@@ -12,7 +12,10 @@ RUN apt-get update \
 
 COPY requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r /app/requirements.txt
+    && pip install --no-cache-dir $(grep -v '^torch' /app/requirements.txt)
+
+# Install CPU-only torch (~150MB instead of ~2GB with CUDA)
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
 
 COPY . /app
 

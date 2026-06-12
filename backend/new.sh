@@ -1,2 +1,2 @@
-cd backend
-docker-compose restart ai-service
+cd "$(dirname "$0")"
+docker compose restart "$@"

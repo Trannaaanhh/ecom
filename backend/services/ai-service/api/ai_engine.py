@@ -5,6 +5,7 @@ from pathlib import Path
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Sequence, Tuple
+import random
 
 try:
     import google.generativeai as genai
@@ -54,6 +55,14 @@ TOKEN_RE = re.compile(r"[0-9a-zA-ZÀ-ỹ]+", re.UNICODE)
 
 FALLBACK_PRODUCTS = [
     {
+        "product_id": "1",
+        "name": "iPhone 15 Pro Max 256GB",
+        "price": 28990000,
+        "category_id": "phone",
+        "category_name": "Phones & Accessories",
+        "description": "Flagship smartphone for photography and mobile work needs.",
+    },
+    {
         "product_id": "2",
         "name": "MacBook Pro M3",
         "price": 32990000,
@@ -62,12 +71,20 @@ FALLBACK_PRODUCTS = [
         "description": "High-performance laptop for work and creative tasks.",
     },
     {
-        "product_id": "1",
-        "name": "iPhone 15 Pro Max 256GB",
-        "price": 28990000,
-        "category_id": "phone",
-        "category_name": "Phones & Accessories",
-        "description": "Flagship smartphone for photography and mobile work needs.",
+        "product_id": "3",
+        "name": "Samsung Galaxy Tab S9 Ultra",
+        "price": 22990000,
+        "category_id": "tablet",
+        "category_name": "Tablets & E-Readers",
+        "description": "Premium Android tablet for media, drawing, and productivity.",
+    },
+    {
+        "product_id": "4",
+        "name": "Sony WH-1000XM5",
+        "price": 7990000,
+        "category_id": "headphones",
+        "category_name": "Audio & Headphones",
+        "description": "Wireless noise-cancelling headphones for music and calls.",
     },
     {
         "product_id": "5",
@@ -78,6 +95,38 @@ FALLBACK_PRODUCTS = [
         "description": "Household appliances for family use and bulk purchases.",
     },
     {
+        "product_id": "6",
+        "name": "Arabica Coffee Beans 1kg",
+        "price": 189000,
+        "category_id": "food",
+        "category_name": "Food & Beverages",
+        "description": "Fast-moving consumer product, suitable for personal and office use.",
+    },
+    {
+        "product_id": "7",
+        "name": "Dell XPS 15 OLED",
+        "price": 28990000,
+        "category_id": "laptop",
+        "category_name": "Laptop & Computers",
+        "description": "Thin-and-light laptop with stunning OLED display for creators.",
+    },
+    {
+        "product_id": "8",
+        "name": "Nike Air Max Pulse",
+        "price": 3990000,
+        "category_id": "fashion",
+        "category_name": "Fashion & Footwear",
+        "description": "Comfortable lifestyle sneakers with modern design.",
+    },
+    {
+        "product_id": "9",
+        "name": "Dyson V15 Detect Cordless Vacuum",
+        "price": 15990000,
+        "category_id": "home",
+        "category_name": "Household Appliances",
+        "description": "Powerful cordless vacuum with laser dust detection.",
+    },
+    {
         "product_id": "10",
         "name": "Ebara Industrial Water Pump 5HP",
         "price": 2490000,
@@ -86,12 +135,204 @@ FALLBACK_PRODUCTS = [
         "description": "Industrial equipment suitable for construction and factories.",
     },
     {
-        "product_id": "6",
-        "name": "Arabica Coffee Beans 1kg",
-        "price": 189000,
-        "category_id": "food",
-        "category_name": "Food & Beverages",
-        "description": "Fast-moving consumer product, suitable for personal and office use.",
+        "product_id": "11",
+        "name": "PlayStation 5 Slim Digital",
+        "price": 11990000,
+        "category_id": "gaming",
+        "category_name": "Gaming & Consoles",
+        "description": "Next-gen gaming console with lightning-fast SSD.",
+    },
+    {
+        "product_id": "12",
+        "name": "Kindle Paperwhite Signature",
+        "price": 4590000,
+        "category_id": "ebooks",
+        "category_name": "Tablets & E-Readers",
+        "description": "Waterproof e-reader with warm adjustable light.",
+    },
+    {
+        "product_id": "13",
+        "name": "Nutribullet Pro 900 Blender",
+        "price": 1590000,
+        "category_id": "kitchen",
+        "category_name": "Kitchen & Dining",
+        "description": "High-speed blender for smoothies, soups, and meal prep.",
+    },
+    {
+        "product_id": "14",
+        "name": "Samsung 65\" Neo QLED 4K TV",
+        "price": 45990000,
+        "category_id": "tv",
+        "category_name": "TV & Home Theater",
+        "description": "Stunning 4K TV with Neo Quantum HDR and smart features.",
+    },
+    {
+        "product_id": "15",
+        "name": "Lego Technic Porsche 911 RSR",
+        "price": 2790000,
+        "category_id": "toys",
+        "category_name": "Toys & Hobbies",
+        "description": "Detailed building kit with working steering and suspension.",
+    },
+    {
+        "product_id": "16",
+        "name": "Apple AirPods Pro 2 USB-C",
+        "price": 6490000,
+        "category_id": "headphones",
+        "category_name": "Audio & Headphones",
+        "description": "Premium wireless earbuds with active noise cancellation and adaptive transparency.",
+    },
+    {
+        "product_id": "17",
+        "name": "Nintendo Switch OLED",
+        "price": 8990000,
+        "category_id": "gaming",
+        "category_name": "Gaming & Consoles",
+        "description": "Hybrid gaming console with vibrant OLED screen for handheld and TV play.",
+    },
+    {
+        "product_id": "18",
+        "name": "Canon EOS R50 Mirrorless Camera",
+        "price": 19990000,
+        "category_id": "camera",
+        "category_name": "Cameras & Photography",
+        "description": "Compact mirrorless camera with 24.2MP sensor and 4K video recording.",
+    },
+    {
+        "product_id": "19",
+        "name": "Oral-B iO Series 9 Electric Toothbrush",
+        "price": 4990000,
+        "category_id": "personal-care",
+        "category_name": "Personal Care & Beauty",
+        "description": "Smart electric toothbrush with AI brushing recognition and magnetic charger.",
+    },
+    {
+        "product_id": "20",
+        "name": "Instant Pot Duo Plus 6-Quart",
+        "price": 2590000,
+        "category_id": "kitchen",
+        "category_name": "Kitchen & Dining",
+        "description": "9-in-1 electric pressure cooker, slow cooker, rice cooker, steamer, and more.",
+    },
+    {
+        "product_id": "21",
+        "name": "Logitech MX Master 3S Mouse",
+        "price": 2590000,
+        "category_id": "office",
+        "category_name": "Office & Stationery",
+        "description": "Ergonomic wireless mouse with quiet clicks and 8K DPI precision sensor.",
+    },
+    {
+        "product_id": "22",
+        "name": "Trek FX 1 Disc Hybrid Bike",
+        "price": 12990000,
+        "category_id": "sports",
+        "category_name": "Sports & Outdoors",
+        "description": "Lightweight hybrid bike ideal for commuting and weekend rides.",
+    },
+    {
+        "product_id": "23",
+        "name": "Yamaha P-145 Digital Piano",
+        "price": 15990000,
+        "category_id": "music",
+        "category_name": "Musical Instruments",
+        "description": "88-key weighted digital piano with realistic grand piano sound.",
+    },
+    {
+        "product_id": "24",
+        "name": "Herman Miller Aeron Chair",
+        "price": 35990000,
+        "category_id": "office",
+        "category_name": "Office & Stationery",
+        "description": "Iconic ergonomic office chair with breathable mesh and adjustable lumbar support.",
+    },
+    {
+        "product_id": "25",
+        "name": "The North Face Himilayan Down Parka",
+        "price": 14990000,
+        "category_id": "fashion",
+        "category_name": "Fashion & Footwear",
+        "description": "Extreme cold-weather down jacket rated to -30C for winter expeditions.",
+    },
+    {
+        "product_id": "26",
+        "name": "GoPro HERO12 Black",
+        "price": 11990000,
+        "category_id": "camera",
+        "category_name": "Cameras & Photography",
+        "description": "Action camera with 5.3K video, HyperSmooth stabilization, and waterproof to 10m.",
+    },
+    {
+        "product_id": "27",
+        "name": "Dyson Supersonic Hair Dryer",
+        "price": 10990000,
+        "category_id": "personal-care",
+        "category_name": "Personal Care & Beauty",
+        "description": "Fast drying with intelligent heat control and magnetic attachments.",
+    },
+    {
+        "product_id": "28",
+        "name": "Adidas Ultraboost Light Running Shoes",
+        "price": 4590000,
+        "category_id": "sports",
+        "category_name": "Sports & Outdoors",
+        "description": "Responsive running shoes with Light BOOST midsole for energy return.",
+    },
+    {
+        "product_id": "29",
+        "name": "Samsung Galaxy Watch 6 Classic 47mm",
+        "price": 9990000,
+        "category_id": "wearable",
+        "category_name": "Wearable Technology",
+        "description": "Smartwatch with rotating bezel, body composition analysis, and sleep tracking.",
+    },
+    {
+        "product_id": "30",
+        "name": "Panasonic Inverter Microwave 27L",
+        "price": 4290000,
+        "category_id": "kitchen",
+        "category_name": "Kitchen & Dining",
+        "description": "Inverter microwave with even heating, auto-cook menus, and child lock.",
+    },
+    {
+        "product_id": "31",
+        "name": "Sennheiser HD 560S Headphones",
+        "price": 4990000,
+        "category_id": "headphones",
+        "category_name": "Audio & Headphones",
+        "description": "Open-back reference headphones for critical listening and mixing.",
+    },
+    {
+        "product_id": "32",
+        "name": "Razer DeathAdder V3 Pro",
+        "price": 3290000,
+        "category_id": "gaming",
+        "category_name": "Gaming & Consoles",
+        "description": "Ultra-lightweight wireless gaming mouse with 30K optical sensor.",
+    },
+    {
+        "product_id": "33",
+        "name": "KitchenAid Artisan Stand Mixer 4.8L",
+        "price": 18990000,
+        "category_id": "kitchen",
+        "category_name": "Kitchen & Dining",
+        "description": "Iconic tilt-head stand mixer with 10 speeds and multiple attachments.",
+    },
+    {
+        "product_id": "34",
+        "name": "JBL Flip 6 Bluetooth Speaker",
+        "price": 2990000,
+        "category_id": "headphones",
+        "category_name": "Audio & Headphones",
+        "description": "Portable waterproof speaker with punchy bass and 12-hour battery.",
+    },
+    {
+        "product_id": "35",
+        "name": "Bose QuietComfort Earbuds II",
+        "price": 7990000,
+        "category_id": "headphones",
+        "category_name": "Audio & Headphones",
+        "description": "Customizable noise cancellation with world-class audio and secure fit.",
     },
 ]
 
@@ -732,6 +973,32 @@ Requirements:
 - Do not fabricate information not present in the context.
 """.strip()
 
+        # Stronger prompt that asks for diverse suggestions and short rationales.
+        prompt = f"""
+    You are a helpful and creative sales advisor for the Ecomerge e-commerce platform.
+
+    Retrieved context:
+    {context}
+
+    Customer inquiry: {message}
+
+    Goal: Provide 2-4 diverse product recommendations (when available) with a one-sentence rationale for each,
+    plus a short, friendly follow-up question to clarify preferences (budget, use-case, brand) when helpful.
+
+    Guidelines:
+    - Use concise, natural language (Vietnamese if user's site language appears to be Vietnamese, otherwise English).
+    - Prefer items present in the retrieved context; if none, be explicit about data limits and ask for clarifying info.
+    - Vary phrasing across responses and avoid repeating the same template.
+    - Keep the reply under 3 short paragraphs.
+
+    Example output:
+    1) Product A - brief reason.
+    2) Product B - brief reason.
+    If you want, I can filter by budget or brand — what is your preferred price range?
+
+    Now answer the customer inquiry using the rules above.
+    """.strip()
+
         model = self._get_gemini_model()
         if model is not None:
             try:
@@ -748,14 +1015,26 @@ Requirements:
             except Exception as exc:
                 logger.error("Gemini generation failed: %s", exc)
 
-        if items:
-            top_items = items[:3]
-            suggestion_text = "; ".join(
-                f"{item['name']} ({item['price']:,}đ)" for item in top_items
-            )
-            reply = f"Bạn có thể tham khảo: {suggestion_text}. Nếu muốn, tôi có thể lọc theo giá hoặc mục đích sử dụng cụ thể hơn."
+            if items:
+                # create several diverse fallback reply templates
+                top_items = items[:4]
+                suggestion_lines = [f"{it['name']} ({it['price']:,}đ) — {it.get('category_name','') or it.get('category_id','') or ''}".strip(' -') for it in top_items]
+                templates = [
+                    lambda s: f"Gợi ý cho bạn: {s}. Muốn mình lọc theo ngân sách hoặc thương hiệu không?",
+                    lambda s: f"Bạn có thể cân nhắc: {s}. Bạn ưu tiên tính năng nào (pin, màn hình, hiệu năng)?",
+                    lambda s: f"Một vài lựa chọn phù hợp: {s}. Mình có thể thu hẹp theo giá hoặc mục đích sử dụng nếu bạn muốn.",
+                    lambda s: f"Đây là những gợi ý ban đầu: {s}. Bạn muốn so sánh chi tiết giữa chúng không?",
+                    lambda s: f"Dưới đây là một vài đề xuất: {s}. Bạn muốn xem thêm sản phẩm tương tự không?",
+                    lambda s: f"Các sản phẩm phù hợp nhất: {s}. Hãy cho mình biết nếu bạn cần tư vấn thêm về giá cả hoặc bảo hành nhé.",
+                    lambda s: f"Mình recommend: {s}. Bạn có muốn khám phá thêm các lựa chọn khác cùng phân khúc không?",
+                    lambda s: f"Here are some suggestions: {s}. Would you like me to narrow down by price or brand?",
+                    lambda s: f"Based on your needs: {s}. Let me know if you prefer other colors, sizes, or specs.",
+                ]
+                joined = "; ".join(suggestion_lines)
+                choice = random.choice(templates)
+                reply = choice(joined)
         else:
-            reply = "Tôi chưa đủ dữ liệu để gợi ý chính xác. Bạn cho mình biết ngân sách, mục đích sử dụng và thương hiệu ưu tiên nhé."
+            reply = "Mình chưa đủ dữ liệu để gợi ý chính xác. Bạn cho mình biết ngân sách, mục đích sử dụng và thương hiệu ưu tiên nhé."
 
         return {
             "model": "hybrid-rag-fallback-v1",

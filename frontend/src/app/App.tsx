@@ -3,6 +3,7 @@ import { Header } from './components/layout/header';
 import { BrowserRouter } from 'react-router-dom';
 import { Router } from './router';
 import { ChatbotWidget } from './components/chatbot/chatbot-widget';
+import { Toaster } from './components/ui/sonner';
 import { useLocation } from 'react-router-dom';
 
 function AppShell() {
@@ -18,6 +19,7 @@ function AppShell() {
       {!isAuthPage && <Header />}
       <Router />
       {!isAuthPage && <ChatbotWidget />}
+      <Toaster />
     </div>
   );
 }

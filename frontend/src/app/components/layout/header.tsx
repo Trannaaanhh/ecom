@@ -73,6 +73,10 @@ export function Header() {
             </Link>
 
             <nav className="hidden items-center gap-6 md:flex">
+              <Link to="/ai" className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1">
+                <Sparkles className="h-4 w-4" />
+                Gợi ý
+              </Link>
               <Link to="/products" className="text-sm font-medium transition-colors hover:text-primary">
                 Categories
               </Link>
@@ -177,6 +181,9 @@ export function Header() {
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Button variant="outline" size="sm" asChild>
               <Link to="/home">Trang chu</Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/ai">Gợi ý</Link>
             </Button>
             <Button variant="outline" size="sm" asChild>
                 <Link to="/products">Categories</Link>

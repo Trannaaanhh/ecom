@@ -48,6 +48,17 @@ Your goal is to design, build, debug, and continuously improve the **Ecommerge**
 - Always consider **Anti-Corruption Layer (ACL)** when translating models between contexts (especially for AI and Search services).
 - When adding new features, identify which Bounded Context it belongs to and how it should integrate with others.
 
+## 🔄 Microservice Independence
+- **Each service is fully independent** — stopping or removing one service does not crash the gateway or affect other services.
+- The Nginx gateway uses `resolver 127.0.0.11` with variable-based `proxy_pass` for optional/scaffold services, allowing graceful 502 responses when a service is offline.
+- **Profiles** control which services start by default:
+  - No profile: essential services (user, catalog, search, order, payment, ai, gateway, postgres, mysql, redis, neo4j)
+  - `--profile scaffold`: scaffold services (inventory, cart, shipping, return-review, marketing-notification)
+  - `--profile full`: event infrastructure (zookeeper, kafka, elasticsearch)
+  - `--profile ui`: frontend container
+- Scaffold services are placeholders with no real business logic — safe to exclude in development.
+- Essential services (`condition: service_healthy` in `depends_on`) wait for their databases before starting, but do not hard-depend on other microservices.
+
 ## 🔐 Security Best Practices
 - Never hardcode secrets — always use environment variables.
 - Validate and sanitize all user inputs (use Django serializers/forms).

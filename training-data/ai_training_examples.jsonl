@@ -1,0 +1,351 @@
+{"user_id": "u123", "language": "en", "query": "recommend a laptop for graphic design student", "behavior": [{"action": "view", "product_id": "2"}, {"action": "search", "product_id": ""}], "recommended_products": [{"product_id": "2", "reason": "Great graphics performance, reasonable price"}, {"product_id": "7", "reason": "OLED display excellent for color-accurate design"}], "chat_responses": ["I'd suggest MacBook Pro M3 (high performance, ~33M) or Dell XPS 15 (great OLED screen, ~28.9M). Do you prioritize performance or display quality?", "Both MacBook Pro M3 (stable, great ecosystem) and Dell XPS 15 (stunning OLED) are solid choices. Would you like me to filter by budget?"]}
+{"user_id": "u456", "language": "en", "query": "looking for a washing machine for a family of 4", "behavior": [{"action": "search", "product_id": "5"}], "recommended_products": [{"product_id": "5", "reason": "large capacity, energy efficient"}], "chat_responses": ["I recommend the LG Inverter 10kg — large capacity and reliable. Do you want models with dryer function?", "For a family of 4, LG 10kg is a solid choice. Shall I show similar options under 45M?"]}
+{"user_id": "", "language": "en", "query": "need an industrial water pump for my workshop", "behavior": [], "recommended_products": [{"product_id": "10", "reason": "suitable power for small workshop, durable"}], "chat_responses": ["I recommend Ebara 5HP — suitable for small workshops, durable and easy to maintain. Do you need installation advice?", "Ebara 5HP is a solid choice. I can share detailed specs if needed."]}
+{"user_id": "u789", "language": "en", "query": "birthday gift ideas for girlfriend", "behavior": [{"action": "view", "product_id": "6"}], "recommended_products": [{"product_id": "6", "reason": "specialty coffee, nice gift packaging"}, {"product_id": "13", "reason": "practical kitchen gift, useful daily"}], "chat_responses": ["Arabica Coffee Beans 1kg (189K) makes a lovely gift — nice packaging, great for coffee lovers. Want me to suggest matching accessories?", "You could gift Arabica coffee with a small brewer, or Nutribullet Pro if she enjoys cooking. Prefer a specific brand?"]}
+{"user_id": "", "language": "en", "query": "best phone for photography under 20M VND", "behavior": [], "recommended_products": [], "chat_responses": ["Do you prefer portrait or landscape photography? Under 20M there are several good options — I can list them once I know your priority."]}
+{"user_id": "u456", "language": "en", "query": "best noise cancelling headphones for office use", "behavior": [{"action": "view", "product_id": "4"}, {"action": "search", "product_id": ""}], "recommended_products": [{"product_id": "4", "reason": "industry-leading ANC, comfortable for long wear"}], "chat_responses": ["The Sony WH-1000XM5 is top-rated for noise cancellation and all-day comfort at 7.99M VND. Would you prefer over-ear or in-ear?", "I'd recommend Sony WH-1000XM5 — great ANC and multipoint Bluetooth. Shall I compare with Bose QC Ultra?"]}
+{"user_id": "u789", "language": "en", "query": "want a tablet for drawing and online classes", "behavior": [{"action": "view", "product_id": "3"}, {"action": "search", "product_id": ""}], "recommended_products": [{"product_id": "3", "reason": "14.6 inch screen, S Pen included, great for drawing and study"}, {"product_id": "12", "reason": "lightweight, long battery, good for reading documents"}], "chat_responses": ["Samsung Galaxy Tab S9 Ultra (14.6\", S Pen included, 22.9M) is excellent for drawing and study. Want me to compare with iPad?", "Consider Galaxy Tab S9 Ultra for drawing (22.9M) or Kindle Paperwhite if mainly for reading. Do you need long battery or a large screen?"]}
+{"user_id": "", "language": "en", "query": "looking for a cheap 4K TV under 15M", "behavior": [], "recommended_products": [], "chat_responses": ["Under 15M there are options from TCL and Xiaomi. What screen size do you need and do you prefer a particular smart TV platform?"]}
+{"user_id": "u123", "language": "en", "query": "PS5 vs Xbox which should I buy", "behavior": [{"action": "view", "product_id": "11"}], "recommended_products": [{"product_id": "11", "reason": "in stock, great exclusive games"}], "chat_responses": ["PS5 Slim Digital is 11.9M and in stock with great exclusives. What games do you play? If you like Halo or Forza, Xbox might be better.", "PS5 Slim Digital is available now. Want me to suggest extra controllers or game bundles?"]}
+{"user_id": "u456", "language": "en", "query": "sneakers for running and daily wear under 5M", "behavior": [{"action": "view", "product_id": "8"}], "recommended_products": [{"product_id": "8", "reason": "stylish and comfortable for both running and casual wear"}], "chat_responses": ["Nike Air Max Pulse at 3.99M is a great hybrid sneaker for running and daily use. What size are you looking for?", "Check out Nike Air Max Pulse — modern design, good cushioning, under 4M. Want to see more color options?"]}
+{"user_id": "u789", "language": "en", "query": "looking for an air purifier for bedroom", "behavior": [], "recommended_products": [], "chat_responses": ["I don't have air purifiers in our catalog yet. Could you share your room size and budget so I can find suitable alternatives?"]}
+{"user_id": "", "language": "en", "query": "is the Dyson vacuum cleaner any good", "behavior": [{"action": "view", "product_id": "9"}], "recommended_products": [{"product_id": "9", "reason": "laser dust detection technology, 60-minute battery"}], "chat_responses": ["Dyson V15 Detect features laser technology that reveals microscopic dust, with 60-min battery life at 15.9M. Do you prefer corded or cordless?", "Dyson V15 is the top cordless model. Want me to compare with other Dyson series?"]}
+{"user_id": "u456", "language": "en", "query": "cheap blender for smoothies under 2M", "behavior": [{"action": "view", "product_id": "13"}], "recommended_products": [{"product_id": "13", "reason": "powerful 900W, good for smoothies and soups"}], "chat_responses": ["Nutribullet Pro 900 is only 1.59M — great for smoothies, soups, and meal prep. Do you prefer glass or plastic container?", "The Nutribullet Pro 900 is affordable and powerful. Would you like to see bundle deals with extra cups?"]}
+{"user_id": "u123", "language": "en", "query": "noise cancelling headphones for office workers", "behavior": [{"action": "view", "product_id": "4"}, {"action": "search", "product_id": ""}], "recommended_products": [{"product_id": "4", "reason": "best active noise cancellation, comfortable all day"}], "chat_responses": ["Sony WH-1000XM5 is the best for office — 7.99M, lightweight, top-notch ANC. Do you need a built-in mic?", "I recommend Sony XM5 for office workers: great ANC, multipoint Bluetooth. Want to see color options?"]}
+{"user_id": "", "language": "en", "query": "Christmas gift for a 10 year old boy", "behavior": [], "recommended_products": [{"product_id": "15", "reason": "detailed building kit suitable for ages 10+"}, {"product_id": "11", "reason": "gaming console if he likes video games"}], "chat_responses": ["Lego Technic Porsche 911 RSR (2.79M) is a fantastic gift for a 10-year-old — fun building experience, great price. Does he like cars?", "You could choose Lego Technic Porsche (hands-on fun) or PS5 if he's into gaming. Traditional toys or tech?"]}
+{"user_id": "u789", "language": "en", "query": "recommend an air fryer for a family of 4", "behavior": [], "recommended_products": [], "chat_responses": ["Air fryers aren't in our catalog yet. Could you tell me your budget and preferred capacity (typically 5-8L for 4 people) so I can look into it?"]}
+{"user_id": "", "language": "en", "query": "is Samsung Galaxy Tab as good as iPad for drawing", "behavior": [{"action": "view", "product_id": "3"}], "recommended_products": [{"product_id": "3", "reason": "S Pen included, low latency, excellent for drawing"}], "chat_responses": ["Galaxy Tab S9 Ultra comes with S Pen (2.8ms latency) — great for drawing. What drawing app do you use? For Procreate, iPad is still better.", "Galaxy Tab S9 Ultra is excellent for drawing — responsive S Pen, 14.6\" screen. But if you need Procreate, go with iPad. Are you a professional artist or hobbyist?"]}
+{"user_id": "u456", "language": "en", "query": "gaming console for 12 year old", "behavior": [{"action": "view", "product_id": "11"}], "recommended_products": [{"product_id": "11", "reason": "age-appropriate games available, lower cost"}], "chat_responses": ["PS5 Slim Digital at 11.9M has great family-friendly games (Spider-Man, Ratchet & Clank). Want bundles with extra controllers?", "For a 12-year-old, PS5 is a solid pick with lots of age-appropriate titles. Would you also consider Nintendo Switch for more kid-friendly options?"]}
+{"user_id": "", "language": "en", "query": "recommend a 4K TV for movies and gaming", "behavior": [{"action": "view", "product_id": "14"}], "recommended_products": [{"product_id": "14", "reason": "Neo QLED, 120Hz for gaming, excellent for movies"}], "chat_responses": ["Samsung 65\" Neo QLED 4K TV at 45.99M offers stunning HDR and 120Hz for smooth gaming. What's your viewing distance?", "The Samsung Neo QLED is excellent for both movies (Neo Quantum HDR) and gaming (4K 120Hz, low input lag). Would you like wall-mount installation?"]}
+{"user_id": "u123", "language": "en", "query": "what's the difference between arabica and robusta coffee", "behavior": [{"action": "view", "product_id": "6"}], "recommended_products": [{"product_id": "6", "reason": "specialty Arabica, smooth flavor profile"}], "chat_responses": ["Arabica (like ours) is smooth with mild acidity and fruity notes; Robusta is stronger and more bitter. Do you brew with a phin filter or espresso machine?", "Our Arabica 1kg is specialty grade — smooth, bright acidity. Want brewing tips?"]}
+{"user_id": "u789", "language": "en", "query": "looking for a side by side refrigerator", "behavior": [], "recommended_products": [], "chat_responses": ["We don't have refrigerators in our catalog yet. What capacity (liters) and budget are you looking at so I can search?"]}
+{"user_id": "", "language": "en", "query": "do you sell smart glasses or smartwatches", "behavior": [], "recommended_products": [], "chat_responses": ["Are you looking for a smartwatch or smart glasses? Wearables aren't in our catalog yet, but I can note your interest for future development."]}
+{"user_id": "u456", "language": "en", "query": "I need a new laptop for programming and AI work", "behavior": [{"action": "view", "product_id": "2"}], "recommended_products": [{"product_id": "2", "reason": "powerful CPU, good for ML workloads"}, {"product_id": "7", "reason": "excellent screen, good GPU for prototyping"}], "chat_responses": ["MacBook Pro M3 (33M) is great for ML with its neural engine; Dell XPS 15 (28.9M) has a dedicated GPU. Do you need CUDA for deep learning?", "For AI work, MacBook Pro M3 offers great performance and battery life. Dell XPS 15 with NVIDIA GPU is better if you need local GPU acceleration. Which framework do you use?"]}
+{"user_id": "", "language": "en", "query": "Lego for a 5 year old beginner", "behavior": [], "recommended_products": [], "chat_responses": ["Lego Technic Porsche (ages 10+) is too difficult for a 5-year-old. I can look for Duplo sets — what themes does your child like (animals, vehicles, buildings)?"]}
+{"user_id": "u123", "language": "en", "query": "good books on business and startups", "behavior": [{"action": "search", "product_id": ""}], "recommended_products": [], "chat_responses": ["Books aren't in our catalog yet. For startup inspiration, check out 'Zero to One' (Peter Thiel) or 'The Lean Startup'. What genre interests you?"]}
+{"user_id": "", "language": "en", "query": "cheap gifts under 2M VND for Christmas", "behavior": [], "recommended_products": [{"product_id": "6", "reason": "affordable premium gift"}, {"product_id": "13", "reason": "practical gift under 2M"}, {"product_id": "15", "reason": "fun building kit within budget"}, {"product_id": "12", "reason": "e-reader gift for book lovers"}], "chat_responses": ["Under 2M VND: Arabica Coffee Beans (189K), Nutribullet Pro (1.59M), Lego Porsche (2.79M slightly over budget). Kindle Paperwhite (4.59M) exceeds budget but is great for readers. Who's the gift for?", "For gifts under 2M: Arabica coffee (189K) for foodies, Nutribullet Pro (1.59M) for health-conscious friends. Lego Porsche (2.79M) goes a bit over but worth it. Need gift wrapping?"]}
+{"user_id":"u321","language":"en","query":"best laptop for software engineering student under 25M","behavior":[{"action":"search","product_id":""},{"action":"view","product_id":"7"}],"recommended_products":[{"product_id":"7","reason":"powerful processor, high-quality display for coding"}],"chat_responses":["Dell XPS 15 is a strong option for software engineering students with excellent performance and display quality. Do you prioritize battery life or performance?","Dell XPS 15 balances portability and power. Would you like alternatives with dedicated GPUs?"]}
+
+{"user_id":"u654","language":"en","query":"wireless earbuds for gym workouts","behavior":[{"action":"view","product_id":"4"}],"recommended_products":[{"product_id":"4","reason":"strong noise cancellation and secure fit"}],"chat_responses":["Sony WH-1000XM5 is excellent for audio quality, but for gym use you may prefer earbuds. Do you need sweat resistance?","Are you looking for in-ear earbuds or over-ear headphones for workouts?"]}
+
+{"user_id":"u111","language":"en","query":"best tablet for note taking in university","behavior":[{"action":"search","product_id":""},{"action":"view","product_id":"3"}],"recommended_products":[{"product_id":"3","reason":"large display and included stylus for note taking"}],"chat_responses":["Galaxy Tab S9 Ultra is excellent for note taking thanks to the included S Pen. Do you need multitasking features?","Samsung Galaxy Tab S9 Ultra offers a great writing experience for students. Would you like an iPad comparison?"]}
+
+{"user_id":"","language":"en","query":"gaming headset under 3M VND","behavior":[],"recommended_products":[],"chat_responses":["What platform do you play on: PC, PlayStation, or Xbox? I can recommend suitable gaming headsets under your budget.","Do you prefer wireless or wired gaming headsets?"]}
+
+{"user_id":"u777","language":"en","query":"best coffee beans for espresso machine","behavior":[{"action":"view","product_id":"6"}],"recommended_products":[{"product_id":"6","reason":"specialty Arabica beans suitable for espresso"}],"chat_responses":["Arabica Coffee Beans provide balanced acidity and sweetness for espresso. Do you prefer light or dark roast?","For espresso, specialty Arabica offers excellent flavor complexity. Want brewing recommendations?"]}
+
+{"user_id":"u555","language":"en","query":"recommend a gift for my father who likes coffee","behavior":[{"action":"view","product_id":"6"}],"recommended_products":[{"product_id":"6","reason":"premium coffee gift with attractive packaging"}],"chat_responses":["Arabica Coffee Beans make a thoughtful gift for coffee lovers. Would you like brewing accessories too?","A premium coffee set could be a great gift. What's your budget?"]}
+
+{"user_id":"","language":"en","query":"which console is better for sports games","behavior":[{"action":"view","product_id":"11"}],"recommended_products":[{"product_id":"11","reason":"excellent support for FIFA, NBA 2K and other sports titles"}],"chat_responses":["PS5 delivers a great sports gaming experience. Do you mainly play online or offline?","If you enjoy FIFA and NBA 2K, PS5 is a strong choice. Interested in bundle deals?"]}
+
+{"user_id":"u999","language":"en","query":"best monitor for graphic design","behavior":[{"action":"search","product_id":""}],"recommended_products":[{"product_id":"7","reason":"OLED display with excellent color accuracy"}],"chat_responses":["A color-accurate OLED display is ideal for graphic design. What's your budget?","Do you need a monitor specifically for Adobe Photoshop and Illustrator work?"]}
+
+{"user_id":"u222","language":"en","query":"need a laptop for video editing","behavior":[{"action":"view","product_id":"2"}],"recommended_products":[{"product_id":"2","reason":"strong performance for rendering and editing workloads"}],"chat_responses":["MacBook Pro M3 handles video editing exceptionally well. What editing software do you use?","Do you need portability or maximum rendering performance?"]}
+
+{"user_id":"","language":"en","query":"recommend something for reading ebooks","behavior":[{"action":"view","product_id":"12"}],"recommended_products":[{"product_id":"12","reason":"lightweight and optimized for long reading sessions"}],"chat_responses":["Kindle Paperwhite is ideal for reading ebooks with excellent battery life. Do you read mostly novels or technical books?","Would you like a waterproof e-reader for travel?"]}
+
+{"user_id":"u444","language":"en","query":"best TV for PlayStation 5","behavior":[{"action":"view","product_id":"14"}],"recommended_products":[{"product_id":"14","reason":"120Hz refresh rate and low input lag"}],"chat_responses":["Samsung Neo QLED supports 4K 120Hz gaming and is perfect for PS5. What's your room size?","For PS5 gaming, a 120Hz TV is highly recommended. Interested in wall mounting options?"]}
+
+{"user_id":"u888","language":"en","query":"gift ideas for a gamer","behavior":[{"action":"view","product_id":"11"}],"recommended_products":[{"product_id":"11","reason":"popular gaming platform with exclusive titles"}],"chat_responses":["A PS5 Slim makes an excellent gift for gamers. What's your budget?","Would you like game recommendations to go with the console?"]}
+
+{"user_id":"","language":"en","query":"best laptop for machine learning projects","behavior":[{"action":"view","product_id":"2"},{"action":"view","product_id":"7"}],"recommended_products":[{"product_id":"2","reason":"excellent processing power for ML development"},{"product_id":"7","reason":"dedicated GPU support"}],"chat_responses":["MacBook Pro M3 is excellent for ML development, while Dell XPS 15 is better if you need GPU acceleration. Which frameworks do you use?","Do you train models locally or mostly use cloud services?"]}
+
+{"user_id":"u135","language":"en","query":"coffee gift under 500k VND","behavior":[{"action":"view","product_id":"6"}],"recommended_products":[{"product_id":"6","reason":"affordable premium coffee gift"}],"chat_responses":["Arabica Coffee Beans are an excellent gift under 500k VND. Need gift wrapping suggestions?","Would you like to combine coffee beans with a mug or brewing accessory?"]}
+
+{"user_id":"u246","language":"en","query":"tablet for digital art beginner","behavior":[{"action":"view","product_id":"3"}],"recommended_products":[{"product_id":"3","reason":"large display and responsive stylus"}],"chat_responses":["Galaxy Tab S9 Ultra is beginner-friendly for digital art. What drawing apps do you plan to use?","Do you prefer Android or iPadOS?"]}
+
+{"user_id":"","language":"en","query":"best productivity laptop for remote work","behavior":[{"action":"view","product_id":"2"}],"recommended_products":[{"product_id":"2","reason":"excellent battery life and performance"}],"chat_responses":["MacBook Pro M3 is ideal for remote work with long battery life. Do you often join video meetings?","Would you like recommendations focused on portability?"]}
+
+{"user_id":"u357","language":"en","query":"headphones for frequent travelers","behavior":[{"action":"view","product_id":"4"}],"recommended_products":[{"product_id":"4","reason":"industry-leading active noise cancellation"}],"chat_responses":["Sony WH-1000XM5 is perfect for flights thanks to its noise cancellation. How often do you travel?","Do you need long battery life for international flights?"]}
+
+{"user_id":"u468","language":"en","query":"which coffee is less bitter","behavior":[{"action":"view","product_id":"6"}],"recommended_products":[{"product_id":"6","reason":"smooth Arabica flavor profile"}],"chat_responses":["Arabica is generally less bitter than Robusta and has sweeter notes. How do you brew your coffee?","Would you like recommendations for light roast coffee?"]}
+
+{"user_id":"","language":"en","query":"student gift ideas under 2M","behavior":[],"recommended_products":[{"product_id":"6","reason":"budget-friendly premium gift"},{"product_id":"13","reason":"useful everyday appliance"}],"chat_responses":["Arabica Coffee Beans and Nutribullet Pro are both practical gifts under 2M. Who is the recipient?","Would you prefer something educational or lifestyle-related?"]}
+
+{"user_id":"u579","language":"en","query":"best device for reading PDFs and textbooks","behavior":[{"action":"view","product_id":"12"},{"action":"view","product_id":"3"}],"recommended_products":[{"product_id":"12","reason":"excellent reading experience"},{"product_id":"3","reason":"large screen for textbooks and PDFs"}],"chat_responses":["Kindle Paperwhite is great for reading books, while Galaxy Tab S9 Ultra is better for PDFs and study materials. Which do you read more?","Do you need annotation and note-taking features?"]}
+
+{"user_id":"u680","language":"en","query":"best budget gaming console","behavior":[{"action":"view","product_id":"11"}],"recommended_products":[{"product_id":"11","reason":"affordable entry into gaming with strong exclusive titles"}],"chat_responses":["PS5 Slim Digital is a great budget-friendly console. Do you prefer physical games or digital downloads?","Would you like to see bundle deals that include games?"]}
+
+{"user_id":"","language":"en","query":"best smart home devices for beginners","behavior":[],"recommended_products":[],"chat_responses":["What type of smart home devices are you interested in: lighting, security, or voice assistants? I can recommend beginner-friendly options."]}
+
+{"user_id":"u791","language":"en","query":"best headphones for working from home","behavior":[{"action":"view","product_id":"4"}],"recommended_products":[{"product_id":"4","reason":"excellent noise cancellation and comfort for long hours"}],"chat_responses":["Sony WH-1000XM5 is ideal for working from home with its noise cancellation. Do you need a built-in microphone for calls?","Would you like to see alternatives with better battery life?"]}
+{"user_id":"u802","language":"en","query":"best laptop for college students","behavior":[{"action":"view","product_id":"2"}],"recommended_products":[{"product_id":"2","reason":"versatile performance and long battery life"}],"chat_responses":["MacBook Pro M3 is a great choice for college students. What will you primarily use it for?","Do you need a lightweight laptop for carrying around campus?"]}
+{"user_id":"u913","language":"en","query":"best headphones for music lovers","behavior":[{"action":"view","product_id":"4"}],"recommended_products":[{"product_id":"4","reason":"superior sound quality and noise cancellation"}],"chat_responses":["Sony WH-1000XM5 offers excellent sound quality for music lovers. What genres do you listen to?","Would you like to see alternatives with a more open soundstage?"]}
+{"user_id":"u1001","language":"en","query":"best gaming laptop under 30M","behavior":[{"action":"view","product_id":"2"}],"recommended_products":[{"product_id":"2","reason":"powerful CPU and GPU for gaming"}],"chat_responses":["MacBook isn't ideal for gaming. Do you prefer RTX graphics cards?","For gaming under 30M, do you prioritize FPS or portability?"]}
+
+{"user_id":"u1002","language":"en","query":"office chair for long working hours","behavior":[],"recommended_products":[],"chat_responses":["Do you prefer mesh or leather chairs?","What's your budget for an ergonomic chair?"]}
+
+{"user_id":"u1003","language":"en","query":"best coffee beans for cold brew","behavior":[{"action":"view","product_id":"6"}],"recommended_products":[{"product_id":"6","reason":"smooth flavor suitable for cold brew"}],"chat_responses":["Arabica works very well for cold brew due to its sweetness.","Do you brew overnight or use a cold brew machine?"]}
+
+{"user_id":"u1004","language":"en","query":"tablet for online teaching","behavior":[{"action":"view","product_id":"3"}],"recommended_products":[{"product_id":"3","reason":"large screen and stylus support"}],"chat_responses":["Galaxy Tab S9 Ultra is excellent for teaching and note taking.","Do you need a keyboard accessory too?"]}
+
+{"user_id":"u1005","language":"en","query":"best headphones for Zoom meetings","behavior":[{"action":"view","product_id":"4"}],"recommended_products":[{"product_id":"4","reason":"excellent microphone and ANC"}],"chat_responses":["Sony XM5 offers great voice quality for meetings.","Will you use it mostly at home or in an office?"]}
+
+{"user_id":"u1006","language":"en","query":"gift for mother who loves reading","behavior":[{"action":"view","product_id":"12"}],"recommended_products":[{"product_id":"12","reason":"comfortable reading experience"}],"chat_responses":["Kindle Paperwhite makes a thoughtful gift for readers.","Does she prefer novels or non-fiction books?"]}
+
+{"user_id":"u1007","language":"en","query":"phone for video recording under 15M","behavior":[],"recommended_products":[],"chat_responses":["Do you prioritize camera stabilization or image quality?","Android or iPhone preference?"]}
+
+{"user_id":"u1008","language":"en","query":"recommend laptop for data science","behavior":[{"action":"view","product_id":"2"}],"recommended_products":[{"product_id":"2","reason":"strong performance for analytics workloads"}],"chat_responses":["MacBook Pro M3 handles Python and ML tasks very well.","Do you train models locally?"]}
+
+{"user_id":"u1009","language":"en","query":"best christmas gift for coworker","behavior":[{"action":"view","product_id":"6"}],"recommended_products":[{"product_id":"6","reason":"affordable premium gift"}],"chat_responses":["Coffee beans are a safe and useful gift for coworkers.","What's your budget range?"]}
+
+{"user_id":"u1010","language":"en","query":"monitor for coding and productivity","behavior":[],"recommended_products":[{"product_id":"7","reason":"large screen and color accuracy"}],"chat_responses":["A 27-inch monitor is ideal for coding.","Do you need USB-C connectivity?"]}
+
+{"user_id":"u1011","language":"en","query":"best gaming console for teenagers","behavior":[{"action":"view","product_id":"11"}],"recommended_products":[{"product_id":"11","reason":"large game library"}],"chat_responses":["PS5 is a popular choice among teenagers.","Do they prefer sports or action games?"]}
+
+{"user_id":"u1012","language":"en","query":"coffee for someone new to specialty coffee","behavior":[{"action":"view","product_id":"6"}],"recommended_products":[{"product_id":"6","reason":"smooth and approachable taste"}],"chat_responses":["Arabica is beginner-friendly and less bitter.","Do they drink black coffee or milk coffee?"]}
+
+{"user_id":"u1013","language":"en","query":"student laptop under 20M","behavior":[{"action":"search","product_id":""}],"recommended_products":[{"product_id":"7","reason":"good balance of performance and price"}],"chat_responses":["Do you need programming or graphic design performance?","Battery life or processing power?"]}
+
+{"user_id":"u1014","language":"en","query":"best blender for protein shakes","behavior":[{"action":"view","product_id":"13"}],"recommended_products":[{"product_id":"13","reason":"powerful motor"}],"chat_responses":["Nutribullet Pro is perfect for smoothies and shakes.","Do you blend frozen fruits often?"]}
+
+{"user_id":"u1015","language":"en","query":"TV for watching football","behavior":[{"action":"view","product_id":"14"}],"recommended_products":[{"product_id":"14","reason":"smooth motion handling"}],"chat_responses":["A 120Hz TV is ideal for sports viewing.","How large is your living room?"]}
+
+{"user_id":"u1016","language":"en","query":"drawing tablet for architecture student","behavior":[{"action":"view","product_id":"3"}],"recommended_products":[{"product_id":"3","reason":"large display for sketches"}],"chat_responses":["Galaxy Tab S9 Ultra works well for design students.","Do you use AutoCAD or SketchUp?"]}
+
+{"user_id":"u1017","language":"en","query":"wireless headphones with long battery life","behavior":[{"action":"view","product_id":"4"}],"recommended_products":[{"product_id":"4","reason":"excellent battery performance"}],"chat_responses":["Sony XM5 lasts over 30 hours per charge.","Do you travel frequently?"]}
+
+{"user_id":"u1018","language":"en","query":"gift under 500k for coffee lover","behavior":[{"action":"view","product_id":"6"}],"recommended_products":[{"product_id":"6","reason":"premium yet affordable"}],"chat_responses":["Arabica coffee beans fit comfortably within your budget.","Would you like brewing accessories too?"]}
+
+{"user_id":"u1019","language":"en","query":"e-reader for technical books","behavior":[{"action":"view","product_id":"12"}],"recommended_products":[{"product_id":"12","reason":"comfortable long reading sessions"}],"chat_responses":["Kindle is excellent for reading PDFs and books.","Do you need note-taking support?"]}
+
+{"user_id":"u1020","language":"en","query":"best laptop for startup founder","behavior":[{"action":"view","product_id":"2"}],"recommended_products":[{"product_id":"2","reason":"reliable and portable"}],"chat_responses":["MacBook Pro is a popular choice among founders.","Do you travel often?"]}
+
+{"user_id":"u1021","language":"en","query":"cheap gaming accessories","behavior":[],"recommended_products":[],"chat_responses":["Controller, headset, or keyboard?","What's your budget?"]}
+
+{"user_id":"u1022","language":"en","query":"air purifier for allergy sufferers","behavior":[],"recommended_products":[],"chat_responses":["What's your room size?","Do you have pets at home?"]}
+
+{"user_id":"u1023","language":"en","query":"coffee gift box for client","behavior":[{"action":"view","product_id":"6"}],"recommended_products":[{"product_id":"6","reason":"premium packaging"}],"chat_responses":["Coffee gift boxes are professional and practical.","How many gift sets do you need?"]}
+
+{"user_id":"u1024","language":"en","query":"headphones for studying in library","behavior":[{"action":"view","product_id":"4"}],"recommended_products":[{"product_id":"4","reason":"excellent ANC"}],"chat_responses":["Sony XM5 blocks background noise effectively.","Do you prefer over-ear or earbuds?"]}
+
+{"user_id":"u1025","language":"en","query":"best gadget for college student","behavior":[{"action":"view","product_id":"12"}],"recommended_products":[{"product_id":"12","reason":"great for reading and studying"}],"chat_responses":["Kindle is a useful gadget for students.","What major are they studying?"]}
+
+{"user_id":"u1026","language":"en","query":"gift for gamer boyfriend","behavior":[{"action":"view","product_id":"11"}],"recommended_products":[{"product_id":"11","reason":"highly desired gaming console"}],"chat_responses":["A PS5 is a dream gift for many gamers.","Do they already own a console?"]}
+
+{"user_id":"u1027","language":"en","query":"coffee beans with chocolate notes","behavior":[{"action":"view","product_id":"6"}],"recommended_products":[{"product_id":"6","reason":"balanced flavor profile"}],"chat_responses":["Arabica often features chocolate and nutty notes.","How do you brew your coffee?"]}
+
+{"user_id":"u1028","language":"en","query":"tablet for watching Netflix","behavior":[{"action":"view","product_id":"3"}],"recommended_products":[{"product_id":"3","reason":"large OLED display"}],"chat_responses":["Galaxy Tab S9 Ultra offers a fantastic viewing experience.","Do you travel often with your tablet?"]}
+
+{"user_id":"u1029","language":"en","query":"best productivity accessories","behavior":[],"recommended_products":[],"chat_responses":["Are you looking for keyboard, monitor, or tablet accessories?","What's your budget?"]}
+
+{"user_id":"u1030","language":"en","query":"TV for PS5 and movies","behavior":[{"action":"view","product_id":"14"}],"recommended_products":[{"product_id":"14","reason":"great HDR and gaming support"}],"chat_responses":["Samsung Neo QLED is excellent for gaming and movies.","How far do you sit from the TV?"]}
+
+{"user_id":"u1031","language":"en","query":"best device for reading manga","behavior":[{"action":"view","product_id":"12"}],"recommended_products":[{"product_id":"12","reason":"portable and sharp display"}],"chat_responses":["Kindle is a popular choice for manga readers.","Color display required?"]}
+
+{"user_id":"u1032","language":"en","query":"gift for wife who likes healthy cooking","behavior":[{"action":"view","product_id":"13"}],"recommended_products":[{"product_id":"13","reason":"useful kitchen appliance"}],"chat_responses":["Nutribullet Pro is excellent for healthy recipes.","Would she use it daily?"]}
+
+{"user_id":"u1033","language":"en","query":"best noise cancelling headset for flights","behavior":[{"action":"view","product_id":"4"}],"recommended_products":[{"product_id":"4","reason":"industry-leading ANC"}],"chat_responses":["Sony XM5 is one of the best travel headphones available.","How long are your typical flights?"]}
+
+{"user_id":"u1034","language":"en","query":"laptop for graphic designer freelancer","behavior":[{"action":"view","product_id":"7"}],"recommended_products":[{"product_id":"7","reason":"excellent color reproduction"}],"chat_responses":["Dell XPS 15 is great for design work.","Do you use Adobe Creative Cloud?"]}
+
+{"user_id":"u1035","language":"en","query":"best christmas gift under 1M","behavior":[],"recommended_products":[{"product_id":"6","reason":"premium affordable gift"}],"chat_responses":["Coffee gifts are popular under 1M.","Who is the recipient?"]}
+
+{"user_id":"u1036","language":"en","query":"device for reading before bed","behavior":[{"action":"view","product_id":"12"}],"recommended_products":[{"product_id":"12","reason":"eye-friendly screen"}],"chat_responses":["Kindle Paperwhite is ideal for bedtime reading.","Do you read every night?"]}
+
+{"user_id":"u1037","language":"en","query":"best blender for meal prep","behavior":[{"action":"view","product_id":"13"}],"recommended_products":[{"product_id":"13","reason":"strong motor and easy cleaning"}],"chat_responses":["Nutribullet handles meal prep efficiently.","How many servings do you prepare?"]}
+
+{"user_id":"u1038","language":"en","query":"recommend gaming setup starter pack","behavior":[{"action":"view","product_id":"11"},{"action":"view","product_id":"4"}],"recommended_products":[{"product_id":"11","reason":"gaming platform"},{"product_id":"4","reason":"immersive audio"}],"chat_responses":["A PS5 plus Sony XM5 creates a strong gaming setup.","What's your overall budget?"]}
+
+{"user_id":"u1039","language":"en","query":"best gift for remote worker","behavior":[{"action":"view","product_id":"4"}],"recommended_products":[{"product_id":"4","reason":"improves focus during work"}],"chat_responses":["Noise-cancelling headphones are very useful for remote workers.","Do they attend many meetings?"]}
+
+{"user_id":"u1040","language":"en","query":"coffee beans for french press","behavior":[{"action":"view","product_id":"6"}],"recommended_products":[{"product_id":"6","reason":"balanced body and flavor"}],"chat_responses":["Arabica performs very well in a French press.","Do you prefer medium or dark roast?"]}
+{"user_id":"u2001","language":"en","query":"best smartwatch for fitness tracking"}
+{"user_id":"u2002","language":"en","query":"running shoes under 3M"}
+{"user_id":"u2003","language":"en","query":"gift for new mom"}
+{"user_id":"u2004","language":"en","query":"gaming mouse for FPS games"}
+{"user_id":"u2005","language":"en","query":"office laptop under 15M"}
+{"user_id":"u2006","language":"en","query":"best backpack for college student"}
+{"user_id":"u2007","language":"en","query":"air fryer under 3M"}
+{"user_id":"u2008","language":"en","query":"protein powder for beginners"}
+{"user_id":"u2009","language":"en","query":"best camera for travel vlog"}
+{"user_id":"u2010","language":"en","query":"gift for father's day"}
+{"user_id":"u2011","language":"en","query":"wireless keyboard for MacBook"}
+{"user_id":"u2012","language":"en","query":"best phone under 10M"}
+{"user_id":"u2013","language":"en","query":"gaming chair for long sessions"}
+{"user_id":"u2014","language":"en","query":"best mechanical keyboard"}
+{"user_id":"u2015","language":"en","query":"gift for cat lover"}
+{"user_id":"u2016","language":"en","query":"laptop for cybersecurity student"}
+{"user_id":"u2017","language":"en","query":"best monitor for programming"}
+{"user_id":"u2018","language":"en","query":"budget espresso machine"}
+{"user_id":"u2019","language":"en","query":"wireless earbuds under 2M"}
+{"user_id":"u2020","language":"en","query":"best yoga mat for home"}
+{"user_id":"u2021","language":"en","query":"gift for wedding anniversary"}
+{"user_id":"u2022","language":"en","query":"best printer for home office"}
+{"user_id":"u2023","language":"en","query":"tablet for kids learning"}
+{"user_id":"u2024","language":"en","query":"gaming laptop with RTX 4060"}
+{"user_id":"u2025","language":"en","query":"best SSD for gaming PC"}
+{"user_id":"u2026","language":"en","query":"air purifier for pet owners"}
+{"user_id":"u2027","language":"en","query":"coffee grinder for espresso"}
+{"user_id":"u2028","language":"en","query":"gift for girlfriend under 1M"}
+{"user_id":"u2029","language":"en","query":"best microphone for podcast"}
+{"user_id":"u2030","language":"en","query":"running watch with GPS"}
+{"user_id":"u2031","language":"en","query":"best bicycle for city commute"}
+{"user_id":"u2032","language":"en","query":"cheap tablet for reading"}
+{"user_id":"u2033","language":"en","query":"best office desk setup"}
+{"user_id":"u2034","language":"en","query":"gift for teacher"}
+{"user_id":"u2035","language":"en","query":"gaming headset under 1M"}
+{"user_id":"u2036","language":"en","query":"best webcam for streaming"}
+{"user_id":"u2037","language":"en","query":"portable speaker for beach"}
+{"user_id":"u2038","language":"en","query":"best vacuum cleaner for apartment"}
+{"user_id":"u2039","language":"en","query":"gift for coffee enthusiast"}
+{"user_id":"u2040","language":"en","query":"best refrigerator for family of 5"}
+{"user_id":"u2041","language":"en","query":"baby stroller under 5M"}
+{"user_id":"u2042","language":"en","query":"gaming desk recommendation"}
+{"user_id":"u2043","language":"en","query":"best DSLR for beginners"}
+{"user_id":"u2044","language":"en","query":"office shoes for men"}
+{"user_id":"u2045","language":"en","query":"gift for mother's birthday"}
+{"user_id":"u2046","language":"en","query":"best mattress for back pain"}
+{"user_id":"u2047","language":"en","query":"kitchen appliance for healthy cooking"}
+{"user_id":"u2048","language":"en","query":"best electric toothbrush"}
+{"user_id":"u2049","language":"en","query":"travel suitcase for international flights"}
+{"user_id":"u2050","language":"en","query":"gaming monitor 144Hz"}
+{"user_id":"u2051","language":"en","query":"best skincare gift set"}
+{"user_id":"u2052","language":"en","query":"wireless charger for iPhone"}
+{"user_id":"u2053","language":"en","query":"best laptop for architecture"}
+{"user_id":"u2054","language":"en","query":"gift for gamer girl"}
+{"user_id":"u2055","language":"en","query":"best smartwatch for Android"}
+{"user_id":"u2056","language":"en","query":"camping tent for 4 people"}
+{"user_id":"u2057","language":"en","query":"best action camera"}
+{"user_id":"u2058","language":"en","query":"home gym equipment beginner"}
+{"user_id":"u2059","language":"en","query":"best gaming router"}
+{"user_id":"u2060","language":"en","query":"gift for book lover"}
+{"user_id":"u2061","language":"en","query":"best external SSD"}
+{"user_id":"u2062","language":"en","query":"laptop for AI engineering"}
+{"user_id":"u2063","language":"en","query":"best standing desk"}
+{"user_id":"u2064","language":"en","query":"gift for 5 year old girl"}
+{"user_id":"u2065","language":"en","query":"best gaming keyboard RGB"}
+{"user_id":"u2066","language":"en","query":"pet camera for dogs"}
+{"user_id":"u2067","language":"en","query":"best smartwatch for seniors"}
+{"user_id":"u2068","language":"en","query":"gift for husband anniversary"}
+{"user_id":"u2069","language":"en","query":"best projector for movies"}
+{"user_id":"u2070","language":"en","query":"budget gaming PC build"}
+{"user_id":"u2071","language":"en","query":"best power bank 20000mah"}
+{"user_id":"u2072","language":"en","query":"laptop for computer science major"}
+{"user_id":"u2073","language":"en","query":"best drone for photography"}
+{"user_id":"u2074","language":"en","query":"gift for retirement party"}
+{"user_id":"u2075","language":"en","query":"best office monitor dual setup"}
+{"user_id":"u2076","language":"en","query":"wireless earbuds for running"}
+{"user_id":"u2077","language":"en","query":"best coffee machine for office"}
+{"user_id":"u2078","language":"en","query":"gift for chef"}
+{"user_id":"u2079","language":"en","query":"best blender for smoothies"}
+{"user_id":"u2080","language":"en","query":"gaming laptop for university"}
+{"user_id":"u2081","language":"en","query":"best water bottle for gym"}
+{"user_id":"u2082","language":"en","query":"gift for dog owner"}
+{"user_id":"u2083","language":"en","query":"best home security camera"}
+{"user_id":"u2084","language":"en","query":"gaming mouse wireless"}
+{"user_id":"u2085","language":"en","query":"best smartwatch under 5M"}
+{"user_id":"u2086","language":"en","query":"gift for software engineer"}
+{"user_id":"u2087","language":"en","query":"best laptop for remote work"}
+{"user_id":"u2088","language":"en","query":"best coffee beans for pour over"}
+{"user_id":"u2089","language":"en","query":"gift for fitness enthusiast"}
+{"user_id":"u2090","language":"en","query":"best NAS for home backup"}
+{"user_id":"u2091","language":"en","query":"office monitor with USB-C"}
+{"user_id":"u2092","language":"en","query":"best gaming controller"}
+{"user_id":"u2093","language":"en","query":"gift for newly married couple"}
+{"user_id":"u2094","language":"en","query":"best tablet for note taking"}
+{"user_id":"u2095","language":"en","query":"wireless speaker for home"}
+{"user_id":"u2096","language":"en","query":"best smartwatch for swimming"}
+{"user_id":"u2097","language":"en","query":"gift for teenager boy"}
+{"user_id":"u2098","language":"en","query":"best laptop for MBA student"}
+{"user_id":"u2099","language":"en","query":"best office headset"}
+{"user_id":"u2100","language":"en","query":"gift for photographer"}{"user_id":"u2001","language":"en","query":"best smartwatch for fitness tracking"}
+{"user_id":"u2002","language":"en","query":"running shoes under 3M"}
+{"user_id":"u2003","language":"en","query":"gift for new mom"}
+{"user_id":"u2004","language":"en","query":"gaming mouse for FPS games"}
+{"user_id":"u2005","language":"en","query":"office laptop under 15M"}
+{"user_id":"u2006","language":"en","query":"best backpack for college student"}
+{"user_id":"u2007","language":"en","query":"air fryer under 3M"}
+{"user_id":"u2008","language":"en","query":"protein powder for beginners"}
+{"user_id":"u2009","language":"en","query":"best camera for travel vlog"}
+{"user_id":"u2010","language":"en","query":"gift for father's day"}
+{"user_id":"u2011","language":"en","query":"wireless keyboard for MacBook"}
+{"user_id":"u2012","language":"en","query":"best phone under 10M"}
+{"user_id":"u2013","language":"en","query":"gaming chair for long sessions"}
+{"user_id":"u2014","language":"en","query":"best mechanical keyboard"}
+{"user_id":"u2015","language":"en","query":"gift for cat lover"}
+{"user_id":"u2016","language":"en","query":"laptop for cybersecurity student"}
+{"user_id":"u2017","language":"en","query":"best monitor for programming"}
+{"user_id":"u2018","language":"en","query":"budget espresso machine"}
+{"user_id":"u2019","language":"en","query":"wireless earbuds under 2M"}
+{"user_id":"u2020","language":"en","query":"best yoga mat for home"}
+{"user_id":"u2021","language":"en","query":"gift for wedding anniversary"}
+{"user_id":"u2022","language":"en","query":"best printer for home office"}
+{"user_id":"u2023","language":"en","query":"tablet for kids learning"}
+{"user_id":"u2024","language":"en","query":"gaming laptop with RTX 4060"}
+{"user_id":"u2025","language":"en","query":"best SSD for gaming PC"}
+{"user_id":"u2026","language":"en","query":"air purifier for pet owners"}
+{"user_id":"u2027","language":"en","query":"coffee grinder for espresso"}
+{"user_id":"u2028","language":"en","query":"gift for girlfriend under 1M"}
+{"user_id":"u2029","language":"en","query":"best microphone for podcast"}
+{"user_id":"u2030","language":"en","query":"running watch with GPS"}
+{"user_id":"u2031","language":"en","query":"best bicycle for city commute"}
+{"user_id":"u2032","language":"en","query":"cheap tablet for reading"}
+{"user_id":"u2033","language":"en","query":"best office desk setup"}
+{"user_id":"u2034","language":"en","query":"gift for teacher"}
+{"user_id":"u2035","language":"en","query":"gaming headset under 1M"}
+{"user_id":"u2036","language":"en","query":"best webcam for streaming"}
+{"user_id":"u2037","language":"en","query":"portable speaker for beach"}
+{"user_id":"u2038","language":"en","query":"best vacuum cleaner for apartment"}
+{"user_id":"u2039","language":"en","query":"gift for coffee enthusiast"}
+{"user_id":"u2040","language":"en","query":"best refrigerator for family of 5"}
+{"user_id":"u2041","language":"en","query":"baby stroller under 5M"}
+{"user_id":"u2042","language":"en","query":"gaming desk recommendation"}
+{"user_id":"u2043","language":"en","query":"best DSLR for beginners"}
+{"user_id":"u2044","language":"en","query":"office shoes for men"}
+{"user_id":"u2045","language":"en","query":"gift for mother's birthday"}
+{"user_id":"u2046","language":"en","query":"best mattress for back pain"}
+{"user_id":"u2047","language":"en","query":"kitchen appliance for healthy cooking"}
+{"user_id":"u2048","language":"en","query":"best electric toothbrush"}
+{"user_id":"u2049","language":"en","query":"travel suitcase for international flights"}
+{"user_id":"u2050","language":"en","query":"gaming monitor 144Hz"}
+{"user_id":"u2051","language":"en","query":"best skincare gift set"}
+{"user_id":"u2052","language":"en","query":"wireless charger for iPhone"}
+{"user_id":"u2053","language":"en","query":"best laptop for architecture"}
+{"user_id":"u2054","language":"en","query":"gift for gamer girl"}
+{"user_id":"u2055","language":"en","query":"best smartwatch for Android"}
+{"user_id":"u2056","language":"en","query":"camping tent for 4 people"}
+{"user_id":"u2057","language":"en","query":"best action camera"}
+{"user_id":"u2058","language":"en","query":"home gym equipment beginner"}
+{"user_id":"u2059","language":"en","query":"best gaming router"}
+{"user_id":"u2060","language":"en","query":"gift for book lover"}
+{"user_id":"u2061","language":"en","query":"best external SSD"}
+{"user_id":"u2062","language":"en","query":"laptop for AI engineering"}
+{"user_id":"u2063","language":"en","query":"best standing desk"}
+{"user_id":"u2064","language":"en","query":"gift for 5 year old girl"}
+{"user_id":"u2065","language":"en","query":"best gaming keyboard RGB"}
+{"user_id":"u2066","language":"en","query":"pet camera for dogs"}
+{"user_id":"u2067","language":"en","query":"best smartwatch for seniors"}
+{"user_id":"u2068","language":"en","query":"gift for husband anniversary"}
+{"user_id":"u2069","language":"en","query":"best projector for movies"}
+{"user_id":"u2070","language":"en","query":"budget gaming PC build"}
+{"user_id":"u2071","language":"en","query":"best power bank 20000mah"}
+{"user_id":"u2072","language":"en","query":"laptop for computer science major"}
+{"user_id":"u2073","language":"en","query":"best drone for photography"}
+{"user_id":"u2074","language":"en","query":"gift for retirement party"}
+{"user_id":"u2075","language":"en","query":"best office monitor dual setup"}
+{"user_id":"u2076","language":"en","query":"wireless earbuds for running"}
+{"user_id":"u2077","language":"en","query":"best coffee machine for office"}
+{"user_id":"u2078","language":"en","query":"gift for chef"}
+{"user_id":"u2079","language":"en","query":"best blender for smoothies"}
+{"user_id":"u2080","language":"en","query":"gaming laptop for university"}
+{"user_id":"u2081","language":"en","query":"best water bottle for gym"}
+{"user_id":"u2082","language":"en","query":"gift for dog owner"}
+{"user_id":"u2083","language":"en","query":"best home security camera"}
+{"user_id":"u2084","language":"en","query":"gaming mouse wireless"}
+{"user_id":"u2085","language":"en","query":"best smartwatch under 5M"}
+{"user_id":"u2086","language":"en","query":"gift for software engineer"}
+{"user_id":"u2087","language":"en","query":"best laptop for remote work"}
+{"user_id":"u2088","language":"en","query":"best coffee beans for pour over"}
+{"user_id":"u2089","language":"en","query":"gift for fitness enthusiast"}
+{"user_id":"u2090","language":"en","query":"best NAS for home backup"}
+{"user_id":"u2091","language":"en","query":"office monitor with USB-C"}
+{"user_id":"u2092","language":"en","query":"best gaming controller"}
+{"user_id":"u2093","language":"en","query":"gift for newly married couple"}
+{"user_id":"u2094","language":"en","query":"best tablet for note taking"}
+{"user_id":"u2095","language":"en","query":"wireless speaker for home"}
+{"user_id":"u2096","language":"en","query":"best smartwatch for swimming"}
+{"user_id":"u2097","language":"en","query":"gift for teenager boy"}
+{"user_id":"u2098","language":"en","query":"best laptop for MBA student"}
+{"user_id":"u2099","language":"en","query":"best office headset"}
+{"user_id":"u2100","language":"en","query":"gift for photographer"}

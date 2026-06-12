@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import { Sparkles, Bot, Loader2 } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -27,22 +27,30 @@ export function AiExperience() {
     setLoadingRecommend(true);
     try {
       const userId = getAiUserId();
-      const [result, catalogResponse] = await Promise.all([
-        getAiRecommendations({
-          userId,
-          query,
-          behavior: getAiBehaviorFromStorage(),
-          limit: 8,
-        }),
-        fetch('/api/products/'),
-      ]);
+      let result = await getAiRecommendations({
+        userId,
+        query,
+        behavior: getAiBehaviorFromStorage(),
+        limit: 8,
+      });
 
-      const catalogPayload = await catalogResponse.json();
-      const catalogIds = new Set(
-        ((catalogPayload.items ?? []) as Array<{ id: number | string }>).map((item) => String(item.id)),
-      );
-
-      const filteredItems = result.items.filter((item) => catalogIds.has(String(item.product_id)));
+      // Try to fetch catalog to filter out missing items. If the catalog call fails,
+      // fall back to returning AI results without filtering so frontend still shows suggestions.
+      let filteredItems = result.items;
+      try {
+        const catalogResponse = await fetch('/api/products/');
+        if (catalogResponse.ok) {
+          const catalogPayload = await catalogResponse.json();
+          const catalogIds = new Set(
+            ((catalogPayload.items ?? []) as Array<{ id: number | string }>).map((item) => String(item.id)),
+          );
+          filteredItems = result.items.filter((item) => catalogIds.has(String(item.product_id)));
+        } else {
+          console.warn('Catalog fetch failed, using AI results without filtering', catalogResponse.status);
+        }
+      } catch (err) {
+        console.warn('Catalog fetch error, using AI results without filtering', err);
+      }
 
       setRecommendations({
         ...result,
@@ -52,6 +60,17 @@ export function AiExperience() {
       setLoadingRecommend(false);
     }
   };
+
+  // Auto-run recommendations while typing (debounced)
+  useEffect(() => {
+    const q = (query || '').trim();
+    if (q.length < 3) return; // require minimal length
+    const timer = setTimeout(() => {
+      // fire without a FormEvent
+      void runRecommendation();
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [query]);
 
   const runChat = async (event?: FormEvent) => {
     event?.preventDefault();
@@ -98,7 +117,15 @@ export function AiExperience() {
             <form className="space-y-3" onSubmit={runRecommendation}>
               <Input
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setQuery(v);
+                  try {
+                    localStorage.setItem('last_search_query', v);
+                  } catch (err) {
+                    // ignore
+                  }
+                }}
                 placeholder="Nhap nhu cau, vi du: laptop gaming, do gia dung..."
               />
               <Button type="submit" disabled={loadingRecommend}>

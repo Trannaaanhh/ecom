@@ -10,5 +10,5 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 COPY . /app
 
-CMD ["sh", "-c", "python manage.py runserver 0.0.0.0:8000"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "inventory_service.wsgi:application"]
 

@@ -6,7 +6,7 @@ import { Badge } from '../ui/badge';
 import { Link } from 'react-router-dom';
 import { Skeleton } from '../ui/skeleton';
 import { ProductArt } from './product-art';
-import { getAiBehaviorFromStorage, getAiRecommendations, getAiUserId } from '../../lib/ai-api';
+// AI recommendations moved to /ai page; Homepage no longer fetches AI results
 import { addCartItem } from '../../lib/cart-store';
 
 type Product = {
@@ -20,16 +20,7 @@ type Product = {
   image: string;
 };
 
-type AiFeaturedProduct = {
-  id: string;
-  name: string;
-  price_text: string;
-  old_price_text: string;
-  badge?: string;
-  score?: number;
-  rating: number;
-  sold: number;
-};
+// Featured products use same Product shape
 
 type Category = {
   id: number;
@@ -41,24 +32,12 @@ type Category = {
 
 export function Homepage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [featuredProducts, setFeaturedProducts] = useState<AiFeaturedProduct[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [trendingProducts, setTrendingProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [aiMeta, setAiMeta] = useState<{ model: string; query: string; userId: string } | null>(null);
+  
 
-  const buyFeaturedProduct = (productId: string) => {
-    const product = featuredProducts.find((item) => item.id === productId);
-    if (!product) return;
-
-    addCartItem({
-      productId: Number(product.id),
-      name: product.name,
-      price: Number(String(product.price_text).replace(/[^0-9]/g, '')) || 0,
-      image: '',
-      category: '',
-      badge: product.badge,
-    });
-  };
+  // Featured products use the same buy flow as trending
 
   const buyTrendingProduct = (product: Product) => {
     addCartItem({
@@ -74,65 +53,30 @@ export function Homepage() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const preferredCategory = localStorage.getItem('last_seen_category') ?? '';
-        const userId = getAiUserId();
-        const behavior = getAiBehaviorFromStorage();
-
-        const [recommendRes, categoriesRes, trendingRes, fallbackFeaturedRes, catalogRes] = await Promise.all([
-          getAiRecommendations({
-            userId,
-            query: preferredCategory || 'homepage',
-            preferredCategory,
-            behavior,
-            limit: 8,
-          }),
+        const [categoriesRes, trendingRes, fallbackFeaturedRes] = await Promise.all([
           fetch('/api/categories/'),
           fetch('/api/products/trending/'),
           fetch('/api/products/featured/'),
-          fetch('/api/products/'),
         ]);
 
         const categoriesJson = await categoriesRes.json();
         const trendingJson = await trendingRes.json();
         const fallbackFeaturedJson = await fallbackFeaturedRes.json();
-        const catalogJson = await catalogRes.json();
-        const catalogIds = new Set(
-          ((catalogJson.items ?? []) as Array<{ id: number | string }>).map((item) => String(item.id)),
-        );
 
-        const aiCandidates = recommendRes.items
-          .filter((item) => catalogIds.has(String(item.product_id)))
-          .map((item) => ({
-              id: item.product_id,
-              name: item.name,
-              price_text: `${item.price.toLocaleString('vi-VN')}đ`,
-              old_price_text: '',
-              badge: item.score !== undefined ? `AI ${Math.round(item.score * 100)}%` : undefined,
-              score: item.score,
-              rating: item.score ? Number((4 + item.score).toFixed(1)) : 4.6,
-              sold: item.score ? Math.max(20, Math.round(item.score * 1000)) : 120,
-            }));
+        const fallbackFeatured = (fallbackFeaturedJson.items ?? []).map((item: any) => ({
+          id: Number(item.id),
+          name: item.name,
+          price_text: item.price_text,
+          old_price_text: item.old_price_text,
+          badge: item.badge,
+          rating: item.rating,
+          sold: item.sold,
+          image: item.image ?? '',
+        } as Product));
 
-        const fallbackFeatured = (fallbackFeaturedJson.items ?? []).map((item: Product) => ({
-              id: String(item.id),
-              name: item.name,
-              price_text: item.price_text,
-              old_price_text: item.old_price_text,
-              badge: item.badge,
-              rating: item.rating,
-              sold: item.sold,
-            }));
-
-        const aiFeatured = aiCandidates.length ? aiCandidates : fallbackFeatured;
-
-        setFeaturedProducts(aiFeatured);
+        setFeaturedProducts(fallbackFeatured);
         setCategories(categoriesJson.items ?? []);
         setTrendingProducts(trendingJson.items ?? []);
-        setAiMeta({
-          model: recommendRes.model,
-          query: recommendRes.query,
-          userId,
-        });
       } finally {
         setIsLoading(false);
       }
@@ -196,13 +140,7 @@ export function Homepage() {
               <h2 className="text-3xl font-bold">Gợi ý cho bạn hôm nay</h2>
             </div>
             <p className="text-muted-foreground">Được cá nhân hóa dựa trên hành vi mua sắm của bạn</p>
-            {aiMeta && (
-              <div className="mt-3 inline-flex flex-wrap gap-2 rounded-lg border border-border bg-card px-3 py-2 text-xs text-muted-foreground">
-                <span>Model: {aiMeta.model}</span>
-                <span>Query: {aiMeta.query}</span>
-                <span>User: {aiMeta.userId}</span>
-              </div>
-            )}
+            {/* AI meta removed from Homepage; recommendations live on /ai */}
           </div>
           <Button variant="ghost" asChild>
             <Link to="/products">
@@ -257,7 +195,7 @@ export function Homepage() {
                         ) : null}
                       </div>
                       <div className="mt-4 flex gap-2">
-                        <Button className="flex-1" onClick={() => buyFeaturedProduct(product.id)}>
+                        <Button className="flex-1" onClick={() => buyTrendingProduct(product as Product)}>
                           Mua hàng
                         </Button>
                         <Button variant="outline" className="flex-1" asChild>
